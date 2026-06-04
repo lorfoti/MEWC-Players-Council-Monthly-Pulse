@@ -1,0 +1,874 @@
+{
+  "metadata": {
+    "title": "MEWC Player Pulse Dashboard",
+    "subtitle": "Monthly sentiment tracker",
+    "last_updated": "2026-06-04",
+    "data_model": "raw_row_level_ratings",
+    "response_count": 59,
+    "scale": "1 = Very negative / major concerns; 5 = Very positive / strong confidence",
+    "areas": [
+      {
+        "id": "player_experience",
+        "label": "Player Experience"
+      },
+      {
+        "id": "competitive_integrity",
+        "label": "Competitive Integrity"
+      },
+      {
+        "id": "transparency",
+        "label": "Transparency"
+      },
+      {
+        "id": "growth_accessibility",
+        "label": "Growth & Accessibility"
+      },
+      {
+        "id": "recognition_value",
+        "label": "Recognition & Value"
+      }
+    ],
+    "months": [
+      "2026-06"
+    ],
+    "regions": [
+      "Americas",
+      "AsiaPac",
+      "Europe/Africa"
+    ],
+    "tenures": [
+      "First year",
+      "2 - 3 years",
+      "More than 3 years"
+    ],
+    "privacy_note": "Public dataset contains anonymous row-level numerical ratings only. Free-text comments are not included in this public JSON."
+  },
+  "responses": [
+    {
+      "id": 1,
+      "timestamp": "2026-06-03T22:19:51",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 4,
+        "transparency": 2,
+        "growth_accessibility": 3,
+        "recognition_value": 3
+      }
+    },
+    {
+      "id": 2,
+      "timestamp": "2026-06-03T22:20:46",
+      "month": "2026-06",
+      "region": "Americas",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 4,
+        "transparency": 2,
+        "growth_accessibility": 2,
+        "recognition_value": 2
+      }
+    },
+    {
+      "id": 3,
+      "timestamp": "2026-06-03T22:22:36",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "First year",
+      "scores": {
+        "player_experience": 1,
+        "competitive_integrity": 3,
+        "transparency": 1,
+        "growth_accessibility": 1,
+        "recognition_value": 1
+      }
+    },
+    {
+      "id": 4,
+      "timestamp": "2026-06-03T22:23:03",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "First year",
+      "scores": {
+        "player_experience": 1,
+        "competitive_integrity": 1,
+        "transparency": 1,
+        "growth_accessibility": 1,
+        "recognition_value": 1
+      }
+    },
+    {
+      "id": 5,
+      "timestamp": "2026-06-03T22:24:05",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 4,
+        "transparency": 1,
+        "growth_accessibility": 2,
+        "recognition_value": 1
+      }
+    },
+    {
+      "id": 6,
+      "timestamp": "2026-06-03T22:25:01",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 5,
+        "competitive_integrity": 3,
+        "transparency": 4,
+        "growth_accessibility": 5,
+        "recognition_value": 5
+      }
+    },
+    {
+      "id": 7,
+      "timestamp": "2026-06-03T22:26:44",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 5,
+        "competitive_integrity": 4,
+        "transparency": 4,
+        "growth_accessibility": 4,
+        "recognition_value": 5
+      }
+    },
+    {
+      "id": 8,
+      "timestamp": "2026-06-03T22:27:22",
+      "month": "2026-06",
+      "region": "Americas",
+      "tenure": "First year",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 4,
+        "transparency": 5,
+        "growth_accessibility": 4,
+        "recognition_value": 5
+      }
+    },
+    {
+      "id": 9,
+      "timestamp": "2026-06-03T22:30:39",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 3,
+        "competitive_integrity": 4,
+        "transparency": 1,
+        "growth_accessibility": 2,
+        "recognition_value": 1
+      }
+    },
+    {
+      "id": 10,
+      "timestamp": "2026-06-03T22:31:01",
+      "month": "2026-06",
+      "region": "Americas",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 4,
+        "transparency": 1,
+        "growth_accessibility": 3,
+        "recognition_value": 1
+      }
+    },
+    {
+      "id": 11,
+      "timestamp": "2026-06-03T22:32:28",
+      "month": "2026-06",
+      "region": "Americas",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 2,
+        "competitive_integrity": 5,
+        "transparency": 1,
+        "growth_accessibility": 1,
+        "recognition_value": 2
+      }
+    },
+    {
+      "id": 12,
+      "timestamp": "2026-06-03T22:32:41",
+      "month": "2026-06",
+      "region": "Americas",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 5,
+        "competitive_integrity": 5,
+        "transparency": 2,
+        "growth_accessibility": 3,
+        "recognition_value": 2
+      }
+    },
+    {
+      "id": 13,
+      "timestamp": "2026-06-03T22:37:12",
+      "month": "2026-06",
+      "region": "Americas",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 5,
+        "transparency": 4,
+        "growth_accessibility": 2,
+        "recognition_value": 3
+      }
+    },
+    {
+      "id": 14,
+      "timestamp": "2026-06-03T22:43:13",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 2,
+        "competitive_integrity": 4,
+        "transparency": 1,
+        "growth_accessibility": 1,
+        "recognition_value": 1
+      }
+    },
+    {
+      "id": 15,
+      "timestamp": "2026-06-03T22:47:12",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 5,
+        "competitive_integrity": 3,
+        "transparency": 3,
+        "growth_accessibility": 2,
+        "recognition_value": 3
+      }
+    },
+    {
+      "id": 16,
+      "timestamp": "2026-06-03T22:49:53",
+      "month": "2026-06",
+      "region": "AsiaPac",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 4,
+        "transparency": 1,
+        "growth_accessibility": 1,
+        "recognition_value": 1
+      }
+    },
+    {
+      "id": 17,
+      "timestamp": "2026-06-03T22:50:31",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 3,
+        "transparency": 1,
+        "growth_accessibility": 2,
+        "recognition_value": 1
+      }
+    },
+    {
+      "id": 18,
+      "timestamp": "2026-06-03T22:57:29",
+      "month": "2026-06",
+      "region": "AsiaPac",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 5,
+        "competitive_integrity": 5,
+        "transparency": 5,
+        "growth_accessibility": 5,
+        "recognition_value": 5
+      }
+    },
+    {
+      "id": 19,
+      "timestamp": "2026-06-03T23:12:17",
+      "month": "2026-06",
+      "region": "Americas",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 1,
+        "competitive_integrity": 4,
+        "transparency": 1,
+        "growth_accessibility": 2,
+        "recognition_value": 2
+      }
+    },
+    {
+      "id": 20,
+      "timestamp": "2026-06-03T23:29:57",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 5,
+        "competitive_integrity": 4,
+        "transparency": 2,
+        "growth_accessibility": 4,
+        "recognition_value": 4
+      }
+    },
+    {
+      "id": 21,
+      "timestamp": "2026-06-03T23:41:19",
+      "month": "2026-06",
+      "region": "Americas",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 3,
+        "competitive_integrity": 5,
+        "transparency": 1,
+        "growth_accessibility": 3,
+        "recognition_value": 2
+      }
+    },
+    {
+      "id": 22,
+      "timestamp": "2026-06-03T23:41:25",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 2,
+        "transparency": 4,
+        "growth_accessibility": 5,
+        "recognition_value": 4
+      }
+    },
+    {
+      "id": 23,
+      "timestamp": "2026-06-03T23:57:42",
+      "month": "2026-06",
+      "region": "AsiaPac",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 5,
+        "transparency": 2,
+        "growth_accessibility": 4,
+        "recognition_value": 1
+      }
+    },
+    {
+      "id": 24,
+      "timestamp": "2026-06-04T00:00:29",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 1,
+        "competitive_integrity": 1,
+        "transparency": 1,
+        "growth_accessibility": 2,
+        "recognition_value": 1
+      }
+    },
+    {
+      "id": 25,
+      "timestamp": "2026-06-04T00:08:10",
+      "month": "2026-06",
+      "region": "Americas",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 5,
+        "competitive_integrity": 5,
+        "transparency": 5,
+        "growth_accessibility": 3,
+        "recognition_value": 5
+      }
+    },
+    {
+      "id": 26,
+      "timestamp": "2026-06-04T00:24:21",
+      "month": "2026-06",
+      "region": "Americas",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 5,
+        "competitive_integrity": 5,
+        "transparency": 5,
+        "growth_accessibility": 4,
+        "recognition_value": 5
+      }
+    },
+    {
+      "id": 27,
+      "timestamp": "2026-06-04T00:27:17",
+      "month": "2026-06",
+      "region": "Americas",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 3,
+        "competitive_integrity": 5,
+        "transparency": 2,
+        "growth_accessibility": 2,
+        "recognition_value": 2
+      }
+    },
+    {
+      "id": 28,
+      "timestamp": "2026-06-04T00:46:25",
+      "month": "2026-06",
+      "region": "Americas",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 3,
+        "competitive_integrity": 4,
+        "transparency": 2,
+        "growth_accessibility": 3,
+        "recognition_value": 3
+      }
+    },
+    {
+      "id": 29,
+      "timestamp": "2026-06-04T03:02:53",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 4,
+        "transparency": 4,
+        "growth_accessibility": 4,
+        "recognition_value": 2
+      }
+    },
+    {
+      "id": 30,
+      "timestamp": "2026-06-04T03:19:38",
+      "month": "2026-06",
+      "region": "Americas",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 3,
+        "transparency": 4,
+        "growth_accessibility": 4,
+        "recognition_value": 4
+      }
+    },
+    {
+      "id": 31,
+      "timestamp": "2026-06-04T03:29:07",
+      "month": "2026-06",
+      "region": "AsiaPac",
+      "tenure": "First year",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 4,
+        "transparency": 3,
+        "growth_accessibility": 3,
+        "recognition_value": 3
+      }
+    },
+    {
+      "id": 32,
+      "timestamp": "2026-06-04T04:36:02",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 4,
+        "transparency": 5,
+        "growth_accessibility": 4,
+        "recognition_value": 5
+      }
+    },
+    {
+      "id": 33,
+      "timestamp": "2026-06-04T05:28:54",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 4,
+        "transparency": 4,
+        "growth_accessibility": 3,
+        "recognition_value": 4
+      }
+    },
+    {
+      "id": 34,
+      "timestamp": "2026-06-04T06:39:35",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 5,
+        "competitive_integrity": 5,
+        "transparency": 5,
+        "growth_accessibility": 5,
+        "recognition_value": 5
+      }
+    },
+    {
+      "id": 35,
+      "timestamp": "2026-06-04T06:48:34",
+      "month": "2026-06",
+      "region": "AsiaPac",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 5,
+        "competitive_integrity": 5,
+        "transparency": 3,
+        "growth_accessibility": 4,
+        "recognition_value": 3
+      }
+    },
+    {
+      "id": 36,
+      "timestamp": "2026-06-04T09:27:29",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "First year",
+      "scores": {
+        "player_experience": 3,
+        "competitive_integrity": 4,
+        "transparency": 1,
+        "growth_accessibility": 2,
+        "recognition_value": 1
+      }
+    },
+    {
+      "id": 37,
+      "timestamp": "2026-06-04T10:08:55",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 4,
+        "transparency": 2,
+        "growth_accessibility": 2,
+        "recognition_value": 2
+      }
+    },
+    {
+      "id": 38,
+      "timestamp": "2026-06-04T12:04:24",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 5,
+        "transparency": 1,
+        "growth_accessibility": 2,
+        "recognition_value": 1
+      }
+    },
+    {
+      "id": 39,
+      "timestamp": "2026-06-04T12:21:47",
+      "month": "2026-06",
+      "region": "Americas",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 5,
+        "transparency": 1,
+        "growth_accessibility": 1,
+        "recognition_value": 1
+      }
+    },
+    {
+      "id": 40,
+      "timestamp": "2026-06-04T12:48:57",
+      "month": "2026-06",
+      "region": "Americas",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 4,
+        "transparency": 3,
+        "growth_accessibility": 3,
+        "recognition_value": 3
+      }
+    },
+    {
+      "id": 41,
+      "timestamp": "2026-06-04T13:00:24",
+      "month": "2026-06",
+      "region": "Americas",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 5,
+        "competitive_integrity": 2,
+        "transparency": 2,
+        "growth_accessibility": 3,
+        "recognition_value": 2
+      }
+    },
+    {
+      "id": 42,
+      "timestamp": "2026-06-04T13:23:58",
+      "month": "2026-06",
+      "region": "AsiaPac",
+      "tenure": "First year",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 5,
+        "transparency": 5,
+        "growth_accessibility": 5,
+        "recognition_value": 4
+      }
+    },
+    {
+      "id": 43,
+      "timestamp": "2026-06-04T13:57:50",
+      "month": "2026-06",
+      "region": "AsiaPac",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 5,
+        "transparency": 1,
+        "growth_accessibility": 2,
+        "recognition_value": 3
+      }
+    },
+    {
+      "id": 44,
+      "timestamp": "2026-06-04T14:13:58",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 3,
+        "competitive_integrity": 4,
+        "transparency": 2,
+        "growth_accessibility": 2,
+        "recognition_value": 2
+      }
+    },
+    {
+      "id": 45,
+      "timestamp": "2026-06-04T14:27:48",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 3,
+        "competitive_integrity": 3,
+        "transparency": 1,
+        "growth_accessibility": 1,
+        "recognition_value": 1
+      }
+    },
+    {
+      "id": 46,
+      "timestamp": "2026-06-04T14:44:25",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 4,
+        "transparency": 1,
+        "growth_accessibility": 2,
+        "recognition_value": 1
+      }
+    },
+    {
+      "id": 47,
+      "timestamp": "2026-06-04T15:30:58",
+      "month": "2026-06",
+      "region": "Americas",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 5,
+        "competitive_integrity": 5,
+        "transparency": 5,
+        "growth_accessibility": 5,
+        "recognition_value": 5
+      }
+    },
+    {
+      "id": 48,
+      "timestamp": "2026-06-04T16:39:29",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 4,
+        "transparency": 2,
+        "growth_accessibility": 3,
+        "recognition_value": 3
+      }
+    },
+    {
+      "id": 49,
+      "timestamp": "2026-06-04T18:17:49",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 2,
+        "transparency": 3,
+        "growth_accessibility": 2,
+        "recognition_value": 3
+      }
+    },
+    {
+      "id": 50,
+      "timestamp": "2026-06-04T18:45:28",
+      "month": "2026-06",
+      "region": "Americas",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 3,
+        "competitive_integrity": 4,
+        "transparency": 3,
+        "growth_accessibility": 3,
+        "recognition_value": 2
+      }
+    },
+    {
+      "id": 51,
+      "timestamp": "2026-06-04T21:15:31",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 3,
+        "transparency": 4,
+        "growth_accessibility": 2,
+        "recognition_value": 3
+      }
+    },
+    {
+      "id": 52,
+      "timestamp": "2026-06-04T21:25:44",
+      "month": "2026-06",
+      "region": "Americas",
+      "tenure": "More than 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 4,
+        "transparency": 1,
+        "growth_accessibility": 3,
+        "recognition_value": 3
+      }
+    },
+    {
+      "id": 53,
+      "timestamp": "2026-06-04T21:31:16",
+      "month": "2026-06",
+      "region": "AsiaPac",
+      "tenure": "First year",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 4,
+        "transparency": 2,
+        "growth_accessibility": 3,
+        "recognition_value": 4
+      }
+    },
+    {
+      "id": 54,
+      "timestamp": "2026-06-04T21:44:54",
+      "month": "2026-06",
+      "region": "Americas",
+      "tenure": "First year",
+      "scores": {
+        "player_experience": 5,
+        "competitive_integrity": 4,
+        "transparency": 2,
+        "growth_accessibility": 3,
+        "recognition_value": 2
+      }
+    },
+    {
+      "id": 55,
+      "timestamp": "2026-06-04T21:46:17",
+      "month": "2026-06",
+      "region": "Europe/Africa",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 5,
+        "competitive_integrity": 5,
+        "transparency": 4,
+        "growth_accessibility": 4,
+        "recognition_value": 5
+      }
+    },
+    {
+      "id": 56,
+      "timestamp": "2026-06-04T21:57:58",
+      "month": "2026-06",
+      "region": "Americas",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 3,
+        "competitive_integrity": 5,
+        "transparency": 4,
+        "growth_accessibility": 2,
+        "recognition_value": 2
+      }
+    },
+    {
+      "id": 57,
+      "timestamp": "2026-06-04T22:31:36",
+      "month": "2026-06",
+      "region": "AsiaPac",
+      "tenure": "First year",
+      "scores": {
+        "player_experience": 3,
+        "competitive_integrity": 3,
+        "transparency": 4,
+        "growth_accessibility": 3,
+        "recognition_value": 4
+      }
+    },
+    {
+      "id": 58,
+      "timestamp": "2026-06-04T23:00:04",
+      "month": "2026-06",
+      "region": "AsiaPac",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 4,
+        "competitive_integrity": 5,
+        "transparency": 4,
+        "growth_accessibility": 2,
+        "recognition_value": 4
+      }
+    },
+    {
+      "id": 59,
+      "timestamp": "2026-06-04T23:24:51",
+      "month": "2026-06",
+      "region": "AsiaPac",
+      "tenure": "2 - 3 years",
+      "scores": {
+        "player_experience": 5,
+        "competitive_integrity": 4,
+        "transparency": 4,
+        "growth_accessibility": 4,
+        "recognition_value": 4
+      }
+    }
+  ]
+}
