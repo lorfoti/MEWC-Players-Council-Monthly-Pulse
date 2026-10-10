@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>MEWC Player Pulse Dashboard</title>
 <style>
+
 :root {
   --bg:#f7f8fb; --surface:#ffffff; --surface-2:#fafbfd; --text:#162032; --muted:#6b7484; --muted-2:#8f98a8;
   --line:#e6eaf0; --line-2:#eef2f6; --shadow:0 16px 40px rgba(16,24,40,.08); --shadow-soft:0 8px 22px rgba(16,24,40,.05);
@@ -117,29 +118,100 @@ footer{color:var(--muted-2);font-size:12px;line-height:1.5;margin-top:24px;text-
 @media (max-width:1040px){.cards{grid-template-columns:repeat(2,1fr);}}
 @media (max-width:900px){header,.grid{grid-template-columns:1fr;} .filters{grid-template-columns:1fr;} .shell{padding:24px 14px 46px;}}
 @media (max-width:620px){.cards{grid-template-columns:1fr;} h1{font-size:40px;}}
+
+/* Multi-survey additions; original palette, panels and typography are retained. */
+[hidden]{display:none!important}
+header>*,.grid>*,.filters>*,.card{min-width:0}
+.filter-wide,.filter-help{grid-column:1/-1}
+.filter-help{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
+select:disabled{opacity:.65;cursor:wait}
+.selection-summary{font-size:13px;color:var(--muted);line-height:1.6;margin:12px 2px 0}
+.warningbox{padding:14px 16px;margin:12px 0 18px;border-radius:16px;border:1px solid #f2dda1;background:var(--neutral-soft);color:#755600;font-size:13px;line-height:1.6;white-space:pre-line}
+.errorbox{white-space:pre-line;overflow-wrap:anywhere}
+.shell[data-state="error"] .dot{background:var(--negative);box-shadow:none}
+.shell[data-state="partial"] .dot{background:var(--neutral);box-shadow:none}
+.shell[data-state="loading"] .dot{background:var(--muted-2);box-shadow:none}
+.badge{white-space:normal;text-align:right;line-height:1.45;flex-shrink:0;max-width:44%}
+.section-head>div:first-child{min-width:0}
+.area-label{align-items:flex-start}
+.info-icon{margin-top:2px}
+.card .value.small{font-size:20px}
+.card .delta{line-height:1.4}
+.smalln{font-weight:500;letter-spacing:0;text-transform:none;line-height:1.4}
+.overview-data{min-width:730px}
+.mini-data{min-width:520px}
+.mini-data .score-pill{font-size:13px;padding:6px 8px}
+.history-data{min-width:1020px}
+.source-data{min-width:690px}
+th,td{overflow-wrap:break-word}
+.score-pill{white-space:nowrap}
+.change-cell .delta{margin:0;padding:5px 8px;white-space:nowrap}
+.trend-tools{display:flex;gap:14px;align-items:flex-end;margin-bottom:12px;flex-wrap:wrap}
+.trend-tools .filter{width:250px;max-width:100%}
+.trend-tools .section-note{font-size:12px;flex:1;min-width:180px;padding-bottom:8px}
+.chart-scroll{overflow-x:auto;max-width:100%;border-radius:12px}
+.svg-wrap svg{min-width:660px}
+.svg-wrap .legend{gap:10px 20px;line-height:1.4}
+.legend>.legend-item{align-items:flex-start}
+.legend .swatch{flex-shrink:0;margin-top:3px}
+.chart-point{cursor:help;outline:none}
+.chart-point:focus{stroke:var(--text);stroke-width:3}
+.chart-note{font-size:12px;color:var(--muted);margin:12px 0 0;line-height:1.5}
+.history-details{margin-top:18px}
+summary{cursor:pointer;color:var(--muted);font-size:13px;font-weight:650;padding:10px 0}
+summary:focus-visible{outline:2px solid #5b8def;outline-offset:4px}
+details[open]>summary{margin-bottom:10px}
+.source-details{margin-top:20px;padding:8px 20px}
+.source-details .section-note{font-size:12px;margin:8px 0 12px}
+.floating-tooltip{max-height:calc(100vh - 24px);overflow:auto}
+footer{max-width:1000px;margin:24px auto 0}
+@media(max-width:620px){
+ .section-head{flex-direction:column;gap:10px}
+ .badge{max-width:100%;text-align:left}
+ section.panel{padding:18px 14px}
+ .filters{padding:16px}
+ .trend-tools .filter{width:100%}
+}
+
 </style>
 </head>
+
 <body>
-<div class="shell">
+<div class="shell" data-state="loading">
 <header>
-<div><div class="eyebrow"><span class="dot"></span><span id="lastUpdated">Monthly player sentiment tracker</span></div><h1>MEWC Player Pulse</h1><div class="subtitle">A public, aggregated dashboard to track how players are feeling across experience, fairness, transparency, growth and recognition.</div></div>
-<div class="panel filters"><div class="filter"><label for="monthFilter">Month</label><select id="monthFilter"></select></div><div class="filter"><label for="regionFilter">Region</label><select id="regionFilter"></select></div><div class="filter"><label for="tenureFilter">Tenure</label><select id="tenureFilter"></select></div></div>
+ <div><div class="eyebrow"><span class="dot"></span><span id="lastUpdated">Loading surveys…</span></div><h1>MEWC Player Pulse</h1><div class="subtitle">A public, aggregated dashboard to track how players are feeling across experience, fairness, transparency, growth and recognition.</div></div>
+ <div class="panel filters">
+  <div class="filter"><label for="monthFilter">Survey month</label><select id="monthFilter" disabled></select></div>
+  <div class="filter"><label for="regionFilter">Region</label><select id="regionFilter" disabled></select></div>
+  <div class="filter"><label for="tenureFilter">Tenure</label><select id="tenureFilter" disabled></select></div>
+  <div class="filter filter-wide"><label for="compareFilter">Compare with</label><select id="compareFilter" disabled></select></div>
+  <p class="filter-help">Survey month is the assigned survey period, not the date a response was submitted.</p>
+ </div>
 </header>
-<div id="errorBox" class="errorbox"></div>
+<noscript><div class="empty">JavaScript is required to load the survey files and calculate this dashboard.</div></noscript>
+<div id="errorBox" class="errorbox" role="alert"></div>
+<div id="warningBox" class="warningbox" role="status" hidden></div>
+<div id="selectionSummary" class="selection-summary" aria-live="polite">Loading the survey manifest and response files…</div>
 <div class="cards" id="cards"></div>
 <div class="grid">
-<section class="panel full"><div class="section-head"><div><h2>Executive overview</h2><div class="section-note">Average, median and score distribution by area for the selected filters.</div></div><div class="badge" id="overviewBadge"></div></div><div id="overviewTable"></div></section>
-<section class="panel full"><div class="section-head"><div><h2>Score distribution</h2><div class="section-note">Share of low, neutral and high scores by area.</div></div><div class="badge">1–2 low · 3 neutral · 4–5 high</div></div><div id="likert"></div></section>
-<section class="panel"><div class="section-head"><div><h2>Region focus</h2><div class="section-note">Average / median by region.</div></div></div><div id="regionTable"></div></section>
-<section class="panel"><div class="section-head"><div><h2>Tenure focus</h2><div class="section-note">Average / median by player tenure.</div></div></div><div id="tenureTable"></div></section>
-<section class="panel full"><div class="section-head"><div><h2>Trend view</h2><div class="section-note">Monthly average score by area for the selected region and tenure.</div></div><div class="badge" id="trendBadge"></div></div><div class="svg-wrap" id="trendChart"></div></section>
+ <section class="panel full"><div class="section-head"><div><h2>Executive overview</h2><div class="section-note">Average, median, change in average and score distribution by area for the selected filters.</div></div><div class="badge" id="overviewBadge"></div></div><div id="overviewTable"></div></section>
+ <section class="panel full"><div class="section-head"><div><h2>Score distribution</h2><div class="section-note">Share of low, neutral and high scores by area. Missing ratings are excluded.</div></div><div class="badge">1–2 low · 3 neutral · 4–5 high</div></div><div id="likert"></div></section>
+ <section class="panel"><div class="section-head"><div><h2>Region focus</h2><div class="section-note">Average / median across all regions, for the selected survey and tenure.</div></div></div><div id="regionTable"></div></section>
+ <section class="panel"><div class="section-head"><div><h2>Tenure focus</h2><div class="section-note">Average / median across all tenures, for the selected survey and region.</div></div></div><div id="tenureTable"></div></section>
+ <section class="panel full"><div class="section-head"><div><h2>Trend view</h2><div class="section-note">All survey rounds, filtered by region and tenure. The selected survey is highlighted.</div></div><div class="badge" id="trendBadge"></div></div>
+  <div class="trend-tools"><div class="filter"><label for="trendMetric">Trend metric</label><select id="trendMetric" disabled><option value="avg">Average score</option><option value="median">Median score</option><option value="high_pct">Positive share (4–5)</option><option value="low_pct">Concern share (1–2)</option></select></div><div class="section-note">Points use the survey month assigned in the manifest, including responses submitted in a different calendar month.</div></div>
+  <div class="svg-wrap" id="trendChart"></div>
+  <details class="history-details"><summary>Survey values and sample sizes</summary><div id="trendTable"></div></details>
+ </section>
 </div>
-<footer>Public dataset contains anonymous row-level ratings only. Free-text comments are not included.</footer>
+<details class="panel source-details" id="sourceDetails"><summary id="sourceSummary">Data sources</summary><div id="sourceTable"></div><div class="section-note">Each file must contain only one survey round, not a cumulative export of multiple rounds. Only files listed in manifest.json are loaded.</div></details>
+<footer>
+ This dashboard displays aggregated ratings. The underlying published JSON files remain accessible and should contain anonymous ratings only, with free-text comments excluded before publication.<br>
+ N counts responses; n counts valid ratings for an area. Overall average and concern share pool all valid area ratings. Survey comparisons use the same region and tenure filters, but do not track the same individuals across rounds. Interpret small groups and changes in sample composition with care.
+</footer>
 </div>
-<script id="embedded-data" type="application/json">{"metadata": {"title": "MEWC Player Pulse Dashboard", "subtitle": "Monthly sentiment tracker", "last_updated": "2026-06-04", "data_model": "raw_row_level_ratings", "response_count": 57, "scale": "1 = Very negative / major concerns; 5 = Very positive / strong confidence", "areas": [{"id": "player_experience", "label": "Player Experience"}, {"id": "competitive_integrity", "label": "Competitive Integrity"}, {"id": "transparency", "label": "Transparency"}, {"id": "growth_accessibility", "label": "Growth & Accessibility"}, {"id": "recognition_value", "label": "Recognition & Value"}], "months": ["2026-06"], "regions": ["Americas", "AsiaPac", "Europe/Africa"], "tenures": ["First year", "2 - 3 years", "More than 3 years"], "privacy_note": "Public dataset contains anonymous row-level numerical ratings only. Free-text comments are not included in this public JSON."}, "responses": [{"id": 1, "timestamp": "2026-06-03T22:19:51", "month": "2026-06", "region": "Europe/Africa", "tenure": "2 - 3 years", "scores": {"player_experience": 4, "competitive_integrity": 4, "transparency": 2, "growth_accessibility": 3, "recognition_value": 3}}, {"id": 2, "timestamp": "2026-06-03T22:20:46", "month": "2026-06", "region": "Americas", "tenure": "More than 3 years", "scores": {"player_experience": 4, "competitive_integrity": 4, "transparency": 2, "growth_accessibility": 2, "recognition_value": 2}}, {"id": 3, "timestamp": "2026-06-03T22:22:36", "month": "2026-06", "region": "Europe/Africa", "tenure": "First year", "scores": {"player_experience": 1, "competitive_integrity": 3, "transparency": 1, "growth_accessibility": 1, "recognition_value": 1}}, {"id": 4, "timestamp": "2026-06-03T22:23:03", "month": "2026-06", "region": "Europe/Africa", "tenure": "First year", "scores": {"player_experience": 1, "competitive_integrity": 1, "transparency": 1, "growth_accessibility": 1, "recognition_value": 1}}, {"id": 5, "timestamp": "2026-06-03T22:24:05", "month": "2026-06", "region": "Europe/Africa", "tenure": "2 - 3 years", "scores": {"player_experience": 4, "competitive_integrity": 4, "transparency": 1, "growth_accessibility": 2, "recognition_value": 1}}, {"id": 6, "timestamp": "2026-06-03T22:25:01", "month": "2026-06", "region": "Europe/Africa", "tenure": "2 - 3 years", "scores": {"player_experience": 5, "competitive_integrity": 3, "transparency": 4, "growth_accessibility": 5, "recognition_value": 5}}, {"id": 7, "timestamp": "2026-06-03T22:26:44", "month": "2026-06", "region": "Europe/Africa", "tenure": "More than 3 years", "scores": {"player_experience": 5, "competitive_integrity": 4, "transparency": 4, "growth_accessibility": 4, "recognition_value": 5}}, {"id": 8, "timestamp": "2026-06-03T22:27:22", "month": "2026-06", "region": "Americas", "tenure": "First year", "scores": {"player_experience": 4, "competitive_integrity": 4, "transparency": 5, "growth_accessibility": 4, "recognition_value": 5}}, {"id": 9, "timestamp": "2026-06-03T22:30:39", "month": "2026-06", "region": "Europe/Africa", "tenure": "2 - 3 years", "scores": {"player_experience": 3, "competitive_integrity": 4, "transparency": 1, "growth_accessibility": 2, "recognition_value": 1}}, {"id": 10, "timestamp": "2026-06-03T22:31:01", "month": "2026-06", "region": "Americas", "tenure": "More than 3 years", "scores": {"player_experience": 4, "competitive_integrity": 4, "transparency": 1, "growth_accessibility": 3, "recognition_value": 1}}, {"id": 11, "timestamp": "2026-06-03T22:32:28", "month": "2026-06", "region": "Americas", "tenure": "2 - 3 years", "scores": {"player_experience": 2, "competitive_integrity": 5, "transparency": 1, "growth_accessibility": 1, "recognition_value": 2}}, {"id": 12, "timestamp": "2026-06-03T22:32:41", "month": "2026-06", "region": "Americas", "tenure": "More than 3 years", "scores": {"player_experience": 5, "competitive_integrity": 5, "transparency": 2, "growth_accessibility": 3, "recognition_value": 2}}, {"id": 13, "timestamp": "2026-06-03T22:37:12", "month": "2026-06", "region": "Americas", "tenure": "More than 3 years", "scores": {"player_experience": 4, "competitive_integrity": 5, "transparency": 4, "growth_accessibility": 2, "recognition_value": 3}}, {"id": 14, "timestamp": "2026-06-03T22:43:13", "month": "2026-06", "region": "Europe/Africa", "tenure": "More than 3 years", "scores": {"player_experience": 2, "competitive_integrity": 4, "transparency": 1, "growth_accessibility": 1, "recognition_value": 1}}, {"id": 15, "timestamp": "2026-06-03T22:47:12", "month": "2026-06", "region": "Europe/Africa", "tenure": "2 - 3 years", "scores": {"player_experience": 5, "competitive_integrity": 3, "transparency": 3, "growth_accessibility": 2, "recognition_value": 3}}, {"id": 16, "timestamp": "2026-06-03T22:49:53", "month": "2026-06", "region": "AsiaPac", "tenure": "More than 3 years", "scores": {"player_experience": 4, "competitive_integrity": 4, "transparency": 1, "growth_accessibility": 1, "recognition_value": 1}}, {"id": 17, "timestamp": "2026-06-03T22:50:31", "month": "2026-06", "region": "Europe/Africa", "tenure": "More than 3 years", "scores": {"player_experience": 4, "competitive_integrity": 3, "transparency": 1, "growth_accessibility": 2, "recognition_value": 1}}, {"id": 18, "timestamp": "2026-06-03T22:57:29", "month": "2026-06", "region": "AsiaPac", "tenure": "More than 3 years", "scores": {"player_experience": 5, "competitive_integrity": 5, "transparency": 5, "growth_accessibility": 5, "recognition_value": 5}}, {"id": 19, "timestamp": "2026-06-03T23:12:17", "month": "2026-06", "region": "Americas", "tenure": "More than 3 years", "scores": {"player_experience": 1, "competitive_integrity": 4, "transparency": 1, "growth_accessibility": 2, "recognition_value": 2}}, {"id": 20, "timestamp": "2026-06-03T23:29:57", "month": "2026-06", "region": "Europe/Africa", "tenure": "2 - 3 years", "scores": {"player_experience": 5, "competitive_integrity": 4, "transparency": 2, "growth_accessibility": 4, "recognition_value": 4}}, {"id": 21, "timestamp": "2026-06-03T23:41:19", "month": "2026-06", "region": "Americas", "tenure": "2 - 3 years", "scores": {"player_experience": 3, "competitive_integrity": 5, "transparency": 1, "growth_accessibility": 3, "recognition_value": 2}}, {"id": 22, "timestamp": "2026-06-03T23:41:25", "month": "2026-06", "region": "Europe/Africa", "tenure": "More than 3 years", "scores": {"player_experience": 4, "competitive_integrity": 2, "transparency": 4, "growth_accessibility": 5, "recognition_value": 4}}, {"id": 23, "timestamp": "2026-06-03T23:57:42", "month": "2026-06", "region": "AsiaPac", "tenure": "More than 3 years", "scores": {"player_experience": 4, "competitive_integrity": 5, "transparency": 2, "growth_accessibility": 4, "recognition_value": 1}}, {"id": 24, "timestamp": "2026-06-04T00:00:29", "month": "2026-06", "region": "Europe/Africa", "tenure": "2 - 3 years", "scores": {"player_experience": 1, "competitive_integrity": 1, "transparency": 1, "growth_accessibility": 2, "recognition_value": 1}}, {"id": 25, "timestamp": "2026-06-04T00:08:10", "month": "2026-06", "region": "Americas", "tenure": "More than 3 years", "scores": {"player_experience": 5, "competitive_integrity": 5, "transparency": 5, "growth_accessibility": 3, "recognition_value": 5}}, {"id": 26, "timestamp": "2026-06-04T00:24:21", "month": "2026-06", "region": "Americas", "tenure": "2 - 3 years", "scores": {"player_experience": 5, "competitive_integrity": 5, "transparency": 5, "growth_accessibility": 4, "recognition_value": 5}}, {"id": 27, "timestamp": "2026-06-04T00:27:17", "month": "2026-06", "region": "Americas", "tenure": "More than 3 years", "scores": {"player_experience": 3, "competitive_integrity": 5, "transparency": 2, "growth_accessibility": 2, "recognition_value": 2}}, {"id": 28, "timestamp": "2026-06-04T00:46:25", "month": "2026-06", "region": "Americas", "tenure": "More than 3 years", "scores": {"player_experience": 3, "competitive_integrity": 4, "transparency": 2, "growth_accessibility": 3, "recognition_value": 3}}, {"id": 29, "timestamp": "2026-06-04T03:02:53", "month": "2026-06", "region": "Europe/Africa", "tenure": "More than 3 years", "scores": {"player_experience": 4, "competitive_integrity": 4, "transparency": 4, "growth_accessibility": 4, "recognition_value": 2}}, {"id": 30, "timestamp": "2026-06-04T03:19:38", "month": "2026-06", "region": "Americas", "tenure": "2 - 3 years", "scores": {"player_experience": 4, "competitive_integrity": 3, "transparency": 4, "growth_accessibility": 4, "recognition_value": 4}}, {"id": 31, "timestamp": "2026-06-04T03:29:07", "month": "2026-06", "region": "AsiaPac", "tenure": "First year", "scores": {"player_experience": 4, "competitive_integrity": 4, "transparency": 3, "growth_accessibility": 3, "recognition_value": 3}}, {"id": 32, "timestamp": "2026-06-04T04:36:02", "month": "2026-06", "region": "Europe/Africa", "tenure": "2 - 3 years", "scores": {"player_experience": 4, "competitive_integrity": 4, "transparency": 5, "growth_accessibility": 4, "recognition_value": 5}}, {"id": 33, "timestamp": "2026-06-04T05:28:54", "month": "2026-06", "region": "Europe/Africa", "tenure": "2 - 3 years", "scores": {"player_experience": 4, "competitive_integrity": 4, "transparency": 4, "growth_accessibility": 3, "recognition_value": 4}}, {"id": 34, "timestamp": "2026-06-04T06:39:35", "month": "2026-06", "region": "Europe/Africa", "tenure": "More than 3 years", "scores": {"player_experience": 5, "competitive_integrity": 5, "transparency": 5, "growth_accessibility": 5, "recognition_value": 5}}, {"id": 35, "timestamp": "2026-06-04T06:48:34", "month": "2026-06", "region": "AsiaPac", "tenure": "2 - 3 years", "scores": {"player_experience": 5, "competitive_integrity": 5, "transparency": 3, "growth_accessibility": 4, "recognition_value": 3}}, {"id": 36, "timestamp": "2026-06-04T09:27:29", "month": "2026-06", "region": "Europe/Africa", "tenure": "First year", "scores": {"player_experience": 3, "competitive_integrity": 4, "transparency": 1, "growth_accessibility": 2, "recognition_value": 1}}, {"id": 37, "timestamp": "2026-06-04T10:08:55", "month": "2026-06", "region": "Europe/Africa", "tenure": "More than 3 years", "scores": {"player_experience": 4, "competitive_integrity": 4, "transparency": 2, "growth_accessibility": 2, "recognition_value": 2}}, {"id": 38, "timestamp": "2026-06-04T12:04:24", "month": "2026-06", "region": "Europe/Africa", "tenure": "More than 3 years", "scores": {"player_experience": 4, "competitive_integrity": 5, "transparency": 1, "growth_accessibility": 2, "recognition_value": 1}}, {"id": 39, "timestamp": "2026-06-04T12:21:47", "month": "2026-06", "region": "Americas", "tenure": "2 - 3 years", "scores": {"player_experience": 4, "competitive_integrity": 5, "transparency": 1, "growth_accessibility": 1, "recognition_value": 1}}, {"id": 40, "timestamp": "2026-06-04T12:48:57", "month": "2026-06", "region": "Americas", "tenure": "More than 3 years", "scores": {"player_experience": 4, "competitive_integrity": 4, "transparency": 3, "growth_accessibility": 3, "recognition_value": 3}}, {"id": 41, "timestamp": "2026-06-04T13:00:24", "month": "2026-06", "region": "Americas", "tenure": "More than 3 years", "scores": {"player_experience": 5, "competitive_integrity": 2, "transparency": 2, "growth_accessibility": 3, "recognition_value": 2}}, {"id": 42, "timestamp": "2026-06-04T13:23:58", "month": "2026-06", "region": "AsiaPac", "tenure": "First year", "scores": {"player_experience": 4, "competitive_integrity": 5, "transparency": 5, "growth_accessibility": 5, "recognition_value": 4}}, {"id": 43, "timestamp": "2026-06-04T13:57:50", "month": "2026-06", "region": "AsiaPac", "tenure": "2 - 3 years", "scores": {"player_experience": 4, "competitive_integrity": 5, "transparency": 1, "growth_accessibility": 2, "recognition_value": 3}}, {"id": 44, "timestamp": "2026-06-04T14:13:58", "month": "2026-06", "region": "Europe/Africa", "tenure": "2 - 3 years", "scores": {"player_experience": 3, "competitive_integrity": 4, "transparency": 2, "growth_accessibility": 2, "recognition_value": 2}}, {"id": 45, "timestamp": "2026-06-04T14:27:48", "month": "2026-06", "region": "Europe/Africa", "tenure": "2 - 3 years", "scores": {"player_experience": 3, "competitive_integrity": 3, "transparency": 1, "growth_accessibility": 1, "recognition_value": 1}}, {"id": 46, "timestamp": "2026-06-04T14:44:25", "month": "2026-06", "region": "Europe/Africa", "tenure": "More than 3 years", "scores": {"player_experience": 4, "competitive_integrity": 4, "transparency": 1, "growth_accessibility": 2, "recognition_value": 1}}, {"id": 47, "timestamp": "2026-06-04T15:30:58", "month": "2026-06", "region": "Americas", "tenure": "2 - 3 years", "scores": {"player_experience": 5, "competitive_integrity": 5, "transparency": 5, "growth_accessibility": 5, "recognition_value": 5}}, {"id": 48, "timestamp": "2026-06-04T16:39:29", "month": "2026-06", "region": "Europe/Africa", "tenure": "More than 3 years", "scores": {"player_experience": 4, "competitive_integrity": 4, "transparency": 2, "growth_accessibility": 3, "recognition_value": 3}}, {"id": 49, "timestamp": "2026-06-04T18:17:49", "month": "2026-06", "region": "Europe/Africa", "tenure": "2 - 3 years", "scores": {"player_experience": 4, "competitive_integrity": 2, "transparency": 3, "growth_accessibility": 2, "recognition_value": 3}}, {"id": 50, "timestamp": "2026-06-04T18:45:28", "month": "2026-06", "region": "Americas", "tenure": "2 - 3 years", "scores": {"player_experience": 3, "competitive_integrity": 4, "transparency": 3, "growth_accessibility": 3, "recognition_value": 2}}, {"id": 51, "timestamp": "2026-06-04T21:15:31", "month": "2026-06", "region": "Europe/Africa", "tenure": "More than 3 years", "scores": {"player_experience": 4, "competitive_integrity": 3, "transparency": 4, "growth_accessibility": 2, "recognition_value": 3}}, {"id": 52, "timestamp": "2026-06-04T21:25:44", "month": "2026-06", "region": "Americas", "tenure": "More than 3 years", "scores": {"player_experience": 4, "competitive_integrity": 4, "transparency": 1, "growth_accessibility": 3, "recognition_value": 3}}, {"id": 53, "timestamp": "2026-06-04T21:31:16", "month": "2026-06", "region": "AsiaPac", "tenure": "First year", "scores": {"player_experience": 4, "competitive_integrity": 4, "transparency": 2, "growth_accessibility": 3, "recognition_value": 4}}, {"id": 54, "timestamp": "2026-06-04T21:44:54", "month": "2026-06", "region": "Americas", "tenure": "First year", "scores": {"player_experience": 5, "competitive_integrity": 4, "transparency": 2, "growth_accessibility": 3, "recognition_value": 2}}, {"id": 55, "timestamp": "2026-06-04T21:46:17", "month": "2026-06", "region": "Europe/Africa", "tenure": "2 - 3 years", "scores": {"player_experience": 5, "competitive_integrity": 5, "transparency": 4, "growth_accessibility": 4, "recognition_value": 5}}, {"id": 56, "timestamp": "2026-06-04T21:57:58", "month": "2026-06", "region": "Americas", "tenure": "2 - 3 years", "scores": {"player_experience": 3, "competitive_integrity": 5, "transparency": 4, "growth_accessibility": 2, "recognition_value": 2}}, {"id": 57, "timestamp": "2026-06-04T22:31:36", "month": "2026-06", "region": "AsiaPac", "tenure": "First year", "scores": {"player_experience": 3, "competitive_integrity": 3, "transparency": 4, "growth_accessibility": 3, "recognition_value": 4}}]}</script>
 <script>
 'use strict';
-let DATA = null;
 const AREA_ORDER = ['player_experience','competitive_integrity','transparency','growth_accessibility','recognition_value'];
 const AREA_SHORT = {
   player_experience:'Player Experience',
@@ -165,195 +237,484 @@ Please base your score on how well MEWC supports new and existing players, inclu
 
 Please base your score on whether players, case authors, volunteers, local organizers, and other contributors feel recognized, respected, and meaningfully valued as part of the ecosystem, including through visibility, communication, incentives, opportunities, and reinvestment into the community.`
 };
-function escAttr(s){
-  return String(s || '').replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;').replaceAll('>','&gt;');
-}
-function areaText(areaId){ return AREA_SHORT[areaId] || areaId; }
-function areaLabel(areaId){
-  return `<span class="area-label">${areaText(areaId)}<span class="info-icon" tabindex="0" aria-label="Question description" data-tip="${escAttr(AREA_TOOLTIPS[areaId] || '')}">i</span></span>`;
-}
+
+// A month belongs to a survey, not to the response timestamp.
+// Add a new survey by uploading its JSON and adding one entry to manifest.json.
+const MANIFEST_FILE = 'manifest.json';
+const REQUEST_TIMEOUT_MS = 15000;
 const LINE_COLORS = ['#5b8def','#3dbb83','#e46a6a','#f2c94c','#8b5cf6'];
-const $ = (id) => document.getElementById(id);
-function validRawData(d) { return d && Array.isArray(d.responses) && d.responses.length > 0; }
-function showError(message) { const box=$('errorBox'); if(box){ box.textContent=message; box.style.display='block'; } }
-async function loadData() {
-  const embeddedRaw = JSON.parse($('embedded-data').textContent);
+const REGION_ORDER = ['Americas','AsiaPac','Europe/Africa'];
+const TENURE_ORDER = ['First year','2 - 3 years','More than 3 years'];
+const ALL = '__all__';
+const AUTO = '__previous__';
+const NONE = '__none__';
+const $ = id => document.getElementById(id);
+let DATA = null;
+
+function esc(s) {
+  return String(s ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;')
+    .replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
+}
+function areaText(id) { return AREA_SHORT[id] || id; }
+function areaLabel(id) {
+  return `<span class="area-label">${esc(areaText(id))}<span class="info-icon" tabindex="0" aria-label="Question description" data-tip="${esc(AREA_TOOLTIPS[id] || '')}">i</span></span>`;
+}
+function fmt(n,d=2) { return Number.isFinite(n) ? n.toFixed(d) : '—'; }
+function pct(n) { return Number.isFinite(n) ? Math.round(n)+'%' : '—'; }
+function med(n) { return Number.isInteger(n) ? String(n) : fmt(n,1); }
+function isObject(v) { return v !== null && typeof v === 'object' && !Array.isArray(v); }
+function isMonth(s) { return typeof s === 'string' && /^(?!0000)\d{4}-(0[1-9]|1[0-2])$/.test(s); }
+function monthLabel(m) {
+  if (!isMonth(m)) return '—';
+  const names = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${names[Number(m.slice(5))-1]} ${m.slice(0,4)}`;
+}
+function groupLabel(g) { return g === ALL ? 'All' : g; }
+function orderedValues(values, preferred) {
+  const present = new Set(values);
+  return preferred.filter(v => present.has(v)).concat([...present].filter(v => !preferred.includes(v)).sort());
+}
+function empty(message) { return `<div class="empty">${esc(message)}</div>`; }
+function showError(message) { $('errorBox').textContent = message; $('errorBox').style.display = 'block'; }
+
+// Fetch as text to tolerate the optional UTF-8 BOM emitted by ADODB.Stream.
+// Requests time out, HTTP errors are checked, and stale embedded data is never used.
+async function fetchJson(url, displayName) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const requestURL = new URL(url);
+  requestURL.searchParams.set('_pulse', String(Date.now()));
   try {
-    const res = await fetch('data.json?cacheBust=' + Date.now(), {cache:'no-store'});
-    if (!res.ok) throw new Error('External data.json not found');
-    const external = await res.json();
-    if (!validRawData(external)) throw new Error('External data.json is not raw-response format');
-    DATA = external;
+    const response = await fetch(requestURL.href, {cache:'no-store', signal:controller.signal});
+    if (!response.ok) throw new Error(`${displayName}: HTTP ${response.status}. Check that the file is published at this path.`);
+    const text = await response.text();
+    try { return JSON.parse(text.replace(/^\uFEFF/, '')); }
+    catch (_) { throw new Error(`${displayName}: invalid JSON. Check its syntax and that this path serves JSON, not an HTML page.`); }
   } catch (e) {
-    DATA = embeddedRaw;
-    console.warn('Using embedded fallback dataset:', e.message);
-  }
-  if (!validRawData(DATA)) {
-    showError('No valid raw response data found. Expected data.json to contain a responses array.');
-    DATA = { metadata: { months: [], regions: [], tenures: [], response_count: 0, last_updated: '' }, responses: [] };
-  }
-  normalizeMetadata();
-  init();
+    if (e.name === 'AbortError') throw new Error(`${displayName}: request timed out after ${REQUEST_TIMEOUT_MS/1000} seconds.`);
+    if (e instanceof TypeError) throw new Error(`${displayName}: network request failed. Open the published site or use a local HTTP server.`);
+    throw e;
+  } finally { clearTimeout(timeout); }
 }
-function normalizeMetadata() {
-  DATA.responses = (DATA.responses || []).filter(r => r && r.month && r.region && r.tenure && r.scores);
-  const months = [...new Set(DATA.responses.map(r=>r.month))].sort();
-  const regionOrder = ['Americas','AsiaPac','Europe/Africa'];
-  const tenureOrder = ['First year','2 - 3 years','More than 3 years'];
-  const presentRegions = new Set(DATA.responses.map(r=>r.region));
-  const presentTenures = new Set(DATA.responses.map(r=>r.tenure));
-  DATA.metadata = DATA.metadata || {};
-  DATA.metadata.months = months;
-  DATA.metadata.regions = regionOrder.filter(r=>presentRegions.has(r)).concat([...presentRegions].filter(r=>!regionOrder.includes(r)).sort());
-  DATA.metadata.tenures = tenureOrder.filter(t=>presentTenures.has(t)).concat([...presentTenures].filter(t=>!tenureOrder.includes(t)).sort());
-  DATA.metadata.response_count = DATA.responses.length;
+
+function validateManifest(manifest, manifestURL) {
+  if (!isObject(manifest) || !Array.isArray(manifest.surveys) || !manifest.surveys.length) {
+    throw new Error('manifest.json must contain a non-empty "surveys" array.');
+  }
+  if (manifest.schema_version !== undefined && manifest.schema_version !== 1) {
+    throw new Error('Unsupported manifest schema_version. This dashboard supports version 1.');
+  }
+  const usedMonths = new Set(), usedFiles = new Set();
+  const entries = manifest.surveys.map((item, i) => {
+    if (!isObject(item) || !isMonth(item.month)) {
+      throw new Error(`Manifest entry ${i+1}: "month" must be YYYY-MM, for example 2026-09.`);
+    }
+    if (usedMonths.has(item.month)) throw new Error(`Manifest: duplicate survey month ${item.month}. Use exactly one file per survey month.`);
+    const file = typeof item.file === 'string' ? item.file.trim() : '';
+    if (!file || file.startsWith('/') || /[\\?#]/.test(file) || /^[a-z][a-z\d+.-]*:/i.test(file)) {
+      throw new Error(`Manifest ${item.month}: "file" must be a relative JSON path, for example data-2026-09.json.`);
+    }
+    let url;
+    try { url = new URL(file, manifestURL); }
+    catch (_) { throw new Error(`Manifest ${item.month}: invalid file path.`); }
+    if (url.origin !== manifestURL.origin || !url.pathname.toLowerCase().endsWith('.json') || url.search || url.hash) {
+      throw new Error(`Manifest ${item.month}: use a .json file on the same site, without a query string or fragment.`);
+    }
+    let identity;
+    try { identity = decodeURIComponent(url.pathname); }
+    catch (_) { throw new Error(`Manifest ${item.month}: invalid percent encoding in file path.`); }
+    if (identity === decodeURIComponent(manifestURL.pathname)) throw new Error('A survey file cannot be manifest.json itself.');
+    if (usedFiles.has(identity)) throw new Error(`Manifest: ${file} is listed more than once. Do not reuse one file for different survey months.`);
+    usedMonths.add(item.month); usedFiles.add(identity);
+    return {month:item.month, file, url:url.href, status:'pending', responses:[], warnings:[], lastUpdated:'', error:''};
+  });
+  return entries.sort((a,b) => a.month.localeCompare(b.month));
 }
-function fmt(n,d=2){return Number.isFinite(n)?n.toFixed(d):'—';}
-function pct(n){return Number.isFinite(n)?Math.round(n)+'%':'—';}
-function monthLabel(m){if(!m) return '—'; const [y,mo]=m.split('-'); const date=new Date(Number(y),Number(mo)-1,1); return date.toLocaleDateString('en-GB',{month:'short',year:'2-digit'});}
-function previousMonth(current){const months=[...DATA.metadata.months].sort(); const idx=months.indexOf(current); return idx>0?months[idx-1]:null;}
-function filterResponses(month, region='All', tenure='All'){return DATA.responses.filter(r=>(r.month===month)&&(region==='All'||r.region===region)&&(tenure==='All'||r.tenure===tenure));}
-function mean(vals){return vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:NaN;}
-function median(vals){if(!vals.length) return NaN; const s=[...vals].sort((a,b)=>a-b); const mid=Math.floor(s.length/2); return s.length%2?s[mid]:(s[mid-1]+s[mid])/2;}
-function areaStats(responses){return AREA_ORDER.map(areaId=>{
-  const vals = responses.map(r=>Number(r.scores && r.scores[areaId])).filter(Number.isFinite);
-  const n = vals.length; const counts={'1':0,'2':0,'3':0,'4':0,'5':0};
-  vals.forEach(v=>{ if(counts[String(v)] !== undefined) counts[String(v)]++; });
-  const low = counts['1']+counts['2'], neu=counts['3'], high=counts['4']+counts['5'];
-  return {area_id:areaId, area:areaText(areaId), n, avg:mean(vals), median:median(vals), counts, low_pct:n?low/n*100:NaN, neutral_pct:n?neu/n*100:NaN, high_pct:n?high/n*100:NaN};
-});}
-function getAreas(month,region,tenure){return areaStats(filterResponses(month,region,tenure));}
-function getN(month,region,tenure){return filterResponses(month,region,tenure).length;}
-function weightedAvg(rows){const totalN=rows.reduce((s,r)=>s+r.n,0); return totalN?rows.reduce((s,r)=>s+r.avg*r.n,0)/totalN:NaN;}
-function concernShare(rows){let low=0,total=0; rows.forEach(r=>{low+=(r.counts['1']||0)+(r.counts['2']||0); total+=r.n;}); return total?low/total*100:NaN;}
-function delta(current,prev,suffix='',decimals=1,reverse=false){if(!Number.isFinite(current)||!Number.isFinite(prev)) return `<span class="delta none">— no previous survey</span>`; const diff=current-prev; if(Math.abs(diff)<0.005) return `<span class="delta flat">◆ no change</span>`; const good=reverse?diff<0:diff>0; const cls=good?'up':'down'; const arrow=diff>0?'▲':'▼'; const val=Math.abs(diff).toFixed(decimals)+suffix; return `<span class="delta ${cls}">${arrow} ${val} vs previous</span>`;}
-function scoreColor(avg){if(!Number.isFinite(avg)) return 'background:#f3f5f8;color:#6b7484;'; if(avg>=4) return 'background:var(--positive-soft);color:#13784e;'; if(avg>=3) return 'background:var(--neutral-soft);color:#7d5a00;'; return 'background:var(--negative-soft);color:#b43d3d;';}
-function init(){
-  $('lastUpdated').textContent = `Last updated ${DATA.metadata.last_updated || ''} · raw responses: ${DATA.metadata.response_count}`;
-  populateFilters();
-  if(DATA.metadata.months.length) $('monthFilter').value = DATA.metadata.months[DATA.metadata.months.length-1];
-  $('regionFilter').value='All'; $('tenureFilter').value='All';
-  ['monthFilter','regionFilter','tenureFilter'].forEach(id => $(id).addEventListener('change', render));
+
+// Null, blank, missing, boolean and out-of-range values must NEVER become 0/1 ratings.
+function parseRating(value) {
+  if (value === null || value === undefined || (typeof value === 'string' && value.trim() === '')) return null;
+  if (typeof value !== 'number' && typeof value !== 'string') return null;
+  const n = Number(value);
+  return Number.isInteger(n) && n >= 1 && n <= 5 ? n : null;
+}
+function hasNonblankValue(v) { return v !== null && v !== undefined && !(typeof v === 'string' && v.trim() === ''); }
+
+function normalizeSurvey(raw, entry) {
+  if (!isObject(raw) || !Array.isArray(raw.responses)) {
+    throw new Error(`${entry.file}: expected an object with a "responses" array, in the format produced by the VBA exporter.`);
+  }
+  const metadata = isObject(raw.metadata) ? raw.metadata : {};
+  const localIds = new Set();
+  let invalidRatings = 0, missingRatings = 0;
+  const responses = raw.responses.map((r, i) => {
+    if (!isObject(r) || !isObject(r.scores)) {
+      throw new Error(`${entry.file}: response ${i+1} must be an object with a "scores" object. This survey was not loaded.`);
+    }
+    // Exported IDs are local to each file; the same ID in another survey is allowed.
+    // Reject duplicate nonblank IDs within a file rather than silently double-counting them.
+    if (hasNonblankValue(r.id)) {
+      if (!['string','number'].includes(typeof r.id)) throw new Error(`${entry.file}: response ${i+1} has an invalid id.`);
+      const id = String(r.id).trim();
+      if (localIds.has(id)) throw new Error(`${entry.file}: duplicate response id ${id} within this file. Check the export for duplicate rows.`);
+      localIds.add(id);
+    }
+    const scores = Object.fromEntries(AREA_ORDER.map(id => {
+      const value = parseRating(r.scores[id]);
+      if (value === null) {
+        if (hasNonblankValue(r.scores[id])) invalidRatings++;
+        else missingRatings++;
+      }
+      return [id, value];
+    }));
+    const region = typeof r.region === 'string' && r.region.trim() ? r.region.trim() : 'Not specified';
+    const tenure = typeof r.tenure === 'string' && r.tenure.trim() ? r.tenure.trim() : 'Not specified';
+    return {
+      id: `${entry.month}:${i+1}`,
+      source_id: r.id ?? null,
+      source_file: entry.file,
+      // The manifest is the authority. These fields are set only in memory.
+      survey_month: entry.month,
+      month: entry.month,
+      original_month: r.month ?? null,
+      timestamp: r.timestamp ?? null,
+      region, tenure, scores
+    };
+  });
+  const warnings = [];
+  if (invalidRatings) warnings.push(`${entry.file}: ${invalidRatings} invalid rating(s) excluded; ratings must be integers from 1 to 5.`);
+  if (metadata.response_count !== undefined && Number(metadata.response_count) !== responses.length) {
+    warnings.push(`${entry.file}: metadata.response_count differs from the actual row count. Using ${responses.length} responses.`);
+  }
+  if (metadata.survey_month && metadata.survey_month !== entry.month) {
+    warnings.push(`${entry.file}: metadata.survey_month differs from the manifest. Using ${entry.month}, as configured in the manifest.`);
+  }
+  const lastUpdated = typeof metadata.last_updated === 'string' && /^\d{4}-\d{2}-\d{2}/.test(metadata.last_updated)
+    ? metadata.last_updated.slice(0,10) : '';
+  return {responses, warnings, invalidRatings, missingRatings, lastUpdated};
+}
+
+async function loadData() {
+  try {
+    if (location.protocol === 'file:') throw new Error('Open this dashboard on GitHub Pages or through a local HTTP server. A double-clicked HTML file cannot reliably load the separate survey JSON files.');
+    const manifestURL = new URL(MANIFEST_FILE, document.baseURI);
+    const manifest = await fetchJson(manifestURL, MANIFEST_FILE);
+    const surveys = validateManifest(manifest, manifestURL);
+    // A failed survey remains in the registry: comparisons do not silently skip it.
+    await Promise.all(surveys.map(async entry => {
+      try {
+        const raw = await fetchJson(entry.url, entry.file);
+        Object.assign(entry, normalizeSurvey(raw, entry), {status:'loaded'});
+      } catch (e) { entry.status = 'error'; entry.error = e.message; }
+    }));
+    const responses = surveys.flatMap(s => s.responses);
+    const dates = surveys.filter(s => s.status === 'loaded' && s.lastUpdated).map(s => s.lastUpdated).sort();
+    DATA = {
+      surveys, responses,
+      metadata: {
+        months: surveys.map(s => s.month),
+        regions: orderedValues(responses.map(r => r.region), REGION_ORDER),
+        tenures: orderedValues(responses.map(r => r.tenure), TENURE_ORDER),
+        response_count: responses.length,
+        last_updated: dates.at(-1) || ''
+      }
+    };
+    const failures = surveys.filter(s => s.status === 'error');
+    const loaded = surveys.length - failures.length;
+    const warnings = surveys.flatMap(s => s.warnings);
+    document.querySelector('.shell').dataset.state = failures.length ? (loaded ? 'partial' : 'error') : 'ready';
+    if (failures.length) {
+      showError(`${failures.length} of ${surveys.length} survey file(s) could not be loaded. Unavailable surveys are not replaced with old data.\n` + failures.map(s => `${monthLabel(s.month)} — ${s.error}`).join('\n'));
+    }
+    if (warnings.length) { $('warningBox').textContent = warnings.join('\n'); $('warningBox').hidden = false; }
+    init();
+  } catch (e) {
+    document.querySelector('.shell').dataset.state = 'error';
+    showError(e.message);
+    $('lastUpdated').textContent = 'Data unavailable';
+    $('selectionSummary').textContent = 'Correct the file or manifest and refresh the page. No embedded fallback data is used.';
+    ['cards','overviewTable','likert','regionTable','tenureTable','trendChart','trendTable'].forEach(id => $(id).innerHTML = empty('Data could not be loaded. See the error above.'));
+    $('sourceDetails').hidden = true;
+  }
+}
+
+function survey(month) { return DATA.surveys.find(s => s.month === month); }
+function isLoaded(month) { return survey(month)?.status === 'loaded'; }
+function previousMonth(current) {
+  const i = DATA.metadata.months.indexOf(current);
+  return i > 0 ? DATA.metadata.months[i-1] : null;
+}
+function filterResponses(month, region=ALL, tenure=ALL) {
+  return (survey(month)?.responses || []).filter(r => (region === ALL || r.region === region) && (tenure === ALL || r.tenure === tenure));
+}
+function mean(vals) { return vals.length ? vals.reduce((a,b) => a+b,0)/vals.length : NaN; }
+function median(vals) {
+  if (!vals.length) return NaN;
+  const s = [...vals].sort((a,b) => a-b), mid = Math.floor(s.length/2);
+  return s.length%2 ? s[mid] : (s[mid-1]+s[mid])/2;
+}
+function areaStats(responses) {
+  return AREA_ORDER.map(id => {
+    const vals = responses.map(r => parseRating(r.scores[id])).filter(v => v !== null);
+    const n = vals.length, counts = {'1':0,'2':0,'3':0,'4':0,'5':0};
+    vals.forEach(v => counts[v]++);
+    const low = counts[1]+counts[2], high = counts[4]+counts[5];
+    return {area_id:id, area:areaText(id), n, avg:mean(vals), median:median(vals), counts,
+      low_pct:n ? low/n*100 : NaN, neutral_pct:n ? counts[3]/n*100 : NaN, high_pct:n ? high/n*100 : NaN};
+  });
+}
+function getAreas(month,region,tenure) { return areaStats(filterResponses(month,region,tenure)); }
+function getN(month,region,tenure) { return filterResponses(month,region,tenure).length; }
+function weightedAvg(rows) {
+  const valid = rows.filter(r => r.n > 0 && Number.isFinite(r.avg));
+  const n = valid.reduce((sum,r) => sum+r.n,0);
+  return n ? valid.reduce((sum,r) => sum+r.avg*r.n,0)/n : NaN;
+}
+function concernShare(rows) {
+  const n = rows.reduce((sum,r) => sum+r.n,0);
+  const low = rows.reduce((sum,r) => sum+r.counts[1]+r.counts[2],0);
+  return n ? low/n*100 : NaN;
+}
+function scoreColor(avg) {
+  if (!Number.isFinite(avg)) return 'background:#f3f5f8;color:#6b7484;';
+  if (avg >= 4) return 'background:var(--positive-soft);color:#13784e;';
+  if (avg >= 3) return 'background:var(--neutral-soft);color:#7d5a00;';
+  return 'background:var(--negative-soft);color:#b43d3d;';
+}
+
+function fillSelect(id, options, selected) {
+  $(id).replaceChildren(...options.map(({value,label}) => new Option(label,value)));
+  if (options.some(o => o.value === selected)) $(id).value = selected;
+}
+function updateCompareOptions() {
+  const month = $('monthFilter').value, prev = previousMonth(month), old = $('compareFilter').value || AUTO;
+  const older = DATA.metadata.months.filter(m => m < month).reverse();
+  const options = [
+    {value:AUTO, label:prev ? `Previous survey (${monthLabel(prev)})` : 'Previous survey (none available)'},
+    {value:NONE, label:'No comparison'},
+    ...older.map(m => ({value:m,label:monthLabel(m)+(isLoaded(m) ? '' : ' — unavailable')}))
+  ];
+  fillSelect('compareFilter', options, options.some(o => o.value === old) ? old : AUTO);
+}
+function comparisonFor(month,region,tenure) {
+  const mode = $('compareFilter').value;
+  const target = mode === NONE ? null : mode === AUTO ? previousMonth(month) : mode;
+  return {month:target, loaded:target ? isLoaded(target) : false,
+    rows:target && isLoaded(target) ? getAreas(target,region,tenure) : [],
+    n:target && isLoaded(target) ? getN(target,region,tenure) : NaN,
+    noneReason:mode === NONE ? 'no comparison' : 'no previous survey'};
+}
+function delta(current, previous, comparison, {suffix='',decimals=2,reverse=false,neutral=false,compact=false}={}) {
+  let reason = '';
+  if (!comparison.month) reason = comparison.noneReason;
+  else if (!comparison.loaded) reason = `${monthLabel(comparison.month)} unavailable`;
+  else if (!Number.isFinite(previous)) reason = `no comparable ratings in ${monthLabel(comparison.month)}`;
+  else if (!Number.isFinite(current)) reason = 'no current ratings';
+  if (reason) return `<span class="delta none" title="${esc(reason)}">${compact ? '—' : '— '+esc(reason)}</span>`;
+  const diff = current-previous, rounded = Number(diff.toFixed(decimals));
+  const context = ` vs ${monthLabel(comparison.month)}`;
+  const title = `${fmt(current,decimals)} vs ${fmt(previous,decimals)} in ${monthLabel(comparison.month)}${suffix === ' pp' ? ' (percentage points)' : ''}`;
+  if (rounded === 0) return `<span class="delta flat" title="${esc(title)}">${compact ? '0.00' : '◆ no change'+context}</span>`;
+  const good = reverse ? diff < 0 : diff > 0;
+  const cls = neutral ? 'flat' : good ? 'up' : 'down';
+  const text = compact ? `${diff>0?'+':'−'}${Math.abs(diff).toFixed(decimals)}${suffix}` : `${diff>0?'▲':'▼'} ${Math.abs(diff).toFixed(decimals)}${suffix}${context}`;
+  return `<span class="delta ${cls}" title="${esc(title)}">${text}</span>`;
+}
+
+function init() {
+  const loaded = DATA.surveys.filter(s => s.status === 'loaded').length;
+  $('lastUpdated').textContent = `${loaded}/${DATA.surveys.length} surveys loaded · ${DATA.metadata.response_count} responses${DATA.metadata.last_updated ? ' · Last export '+DATA.metadata.last_updated : ''}`;
+  fillSelect('monthFilter', [...DATA.metadata.months].reverse().map(m => ({value:m,label:monthLabel(m)+(isLoaded(m) ? '' : ' — unavailable')})), DATA.metadata.months.at(-1));
+  fillSelect('regionFilter', [{value:ALL,label:'All'},...DATA.metadata.regions.map(v => ({value:v,label:v}))], ALL);
+  fillSelect('tenureFilter', [{value:ALL,label:'All'},...DATA.metadata.tenures.map(v => ({value:v,label:v}))], ALL);
+  updateCompareOptions();
+  ['monthFilter','regionFilter','tenureFilter','compareFilter','trendMetric'].forEach(id => $(id).disabled = false);
+  $('monthFilter').addEventListener('change', () => { updateCompareOptions(); render(); });
+  ['regionFilter','tenureFilter','compareFilter','trendMetric'].forEach(id => $(id).addEventListener('change', render));
+  renderSources();
   render();
 }
-function populateFilters(){
-  $('monthFilter').innerHTML = DATA.metadata.months.map(m=>`<option value="${m}">${monthLabel(m)}</option>`).join('');
-  $('regionFilter').innerHTML = ['All',...DATA.metadata.regions].map(r=>`<option value="${r}">${r}</option>`).join('');
-  $('tenureFilter').innerHTML = ['All',...DATA.metadata.tenures].map(t=>`<option value="${t}">${t}</option>`).join('');
-}
-function render(){
-  const month=$('monthFilter').value, region=$('regionFilter').value, tenure=$('tenureFilter').value;
-  const rows=getAreas(month,region,tenure); const n=getN(month,region,tenure);
-  if(!n) return renderEmpty(month,region,tenure);
-  renderCards(month,region,tenure,rows); renderOverview(month,region,tenure,rows); renderLikert(rows); renderRegionFocus(month,tenure); renderTenureFocus(month,region); renderTrend(region,tenure);
-}
-function renderEmpty(month,region,tenure){
-  $('cards').innerHTML = `<div class="card" style="grid-column:1/-1"><div class="label">No data</div><div class="value small">No responses for this filter combination</div><div class="foot">${monthLabel(month)} · ${region} · ${tenure}</div></div>`;
-  ['overviewTable','likert','regionTable','tenureTable','trendChart'].forEach(id => $(id).innerHTML = `<div class="empty">No data available for the selected filters.</div>`);
-  $('overviewBadge').textContent='N = 0'; $('trendBadge').textContent='No data';
-}
-function renderCards(month,region,tenure,rows){
-  const n=getN(month,region,tenure), avg=weightedAvg(rows), concern=concernShare(rows);
-  const strongest=[...rows].sort((a,b)=>b.avg-a.avg)[0];
-  const weakest=[...rows].sort((a,b)=>a.avg-b.avg)[0];
-  const prev=previousMonth(month); const prevRows=prev?getAreas(prev,region,tenure):[];
-  const prevN=prev?getN(prev,region,tenure):NaN; const prevAvg=prevRows.length?weightedAvg(prevRows):NaN; const prevConcern=prevRows.length?concernShare(prevRows):NaN;
-  const prevStrong=prevRows.find(r=>r.area_id===strongest.area_id); const prevWeak=prevRows.find(r=>r.area_id===weakest.area_id);
-  $('cards').innerHTML = `
-  <div class="card"><div class="label">Responses</div><div class="value">${n}</div><div class="foot">Selected filters</div>${delta(n,prevN,'',0)}</div>
-  <div class="card"><div class="label">Overall average</div><div class="value">${fmt(avg,2)}</div><div class="foot">Across all five areas</div>${delta(avg,prevAvg,'',2)}</div>
-  <div class="card"><div class="label">👍 Strongest area</div><div class="value small">${areaLabel(strongest.area_id)}</div><div class="foot">Avg ${fmt(strongest.avg,2)} · Median ${Number.isInteger(strongest.median)?strongest.median:fmt(strongest.median,1)}</div>${delta(strongest.avg,prevStrong?prevStrong.avg:NaN,'',2)}</div>
-  <div class="card"><div class="label">👎 Weakest area</div><div class="value small">${areaLabel(weakest.area_id)}</div><div class="foot">Avg ${fmt(weakest.avg,2)} · Median ${Number.isInteger(weakest.median)?weakest.median:fmt(weakest.median,1)}</div>${delta(weakest.avg,prevWeak?prevWeak.avg:NaN,'',2)}</div>
-  <div class="card"><div class="label">Concern share</div><div class="value">${pct(concern)}</div><div class="foot">Scores 1–2 across all areas</div>${delta(concern,prevConcern,' pts',1,true)}</div>`;
-}
-function renderOverview(month,region,tenure,rows){
-  $('overviewBadge').textContent = `${monthLabel(month)} · ${region} · ${tenure}`;
-  const body=rows.map(r=>`<tr><td><span class="area-name">${areaLabel(r.area_id)}</span></td><td class="num"><span class="score-pill" style="${scoreColor(r.avg)}">${fmt(r.avg,2)}</span></td><td class="num">${Number.isInteger(r.median)?r.median:fmt(r.median,1)}</td><td class="num">${pct(r.low_pct)}</td><td class="num">${pct(r.high_pct)}</td></tr>`).join('');
-  $('overviewTable').innerHTML = `<div class="table-wrap"><table><colgroup><col style="width:40%"><col style="width:15%"><col style="width:15%"><col style="width:15%"><col style="width:15%"></colgroup><thead><tr><th>Area</th><th class="num">Average</th><th class="num">Median</th><th class="num">% 1–2</th><th class="num">% 4–5</th></tr></thead><tbody>${body}</tbody></table></div>`;
-}
-function renderLikert(rows){
-  $('likert').innerHTML = rows.map(r=>{const low=Math.round(r.low_pct), neu=Math.round(r.neutral_pct), high=Math.round(r.high_pct); return `<div class="likert-row"><div class="likert-label"><strong>${areaLabel(r.area_id)}</strong></div><div class="likert-bar"><div class="seg neg" style="width:${r.low_pct}%"><span>${low}%</span></div><div class="seg neu" style="width:${r.neutral_pct}%"><span>${neu}%</span></div><div class="seg pos" style="width:${r.high_pct}%"><span>${high}%</span></div></div></div>`;}).join('') + `<div class="legend"><span><i class="swatch" style="background:var(--negative-soft);border:1px solid #f3c9c9"></i>1–2 low / concern</span><span><i class="swatch" style="background:var(--neutral-soft);border:1px solid #f2dda1"></i>3 neutral / mixed</span><span><i class="swatch" style="background:var(--positive-soft);border:1px solid #bfe8d2"></i>4–5 positive</span></div>`;
-}
-function miniTable(month, groups, groupType, fixedFilter){
-  const headers = groups.map(g=>{
-    const responses = groupType==='region' ? filterResponses(month,g,fixedFilter) : filterResponses(month,fixedFilter,g);
-    return `<th class="num">${g}<span class="smalln">N=${responses.length}</span></th>`;
-  }).join('');
-  const rowsHtml=AREA_ORDER.map(areaId=>{
-    const cells=groups.map(g=>{
-      const responses = groupType==='region' ? filterResponses(month,g,fixedFilter) : filterResponses(month,fixedFilter,g);
-      const st = areaStats(responses).find(x=>x.area_id===areaId);
-      if(!st || !st.n) return `<td class="num">—</td>`;
-      return `<td class="num"><span class="score-pill" style="${scoreColor(st.avg)}">${fmt(st.avg,2)} / ${Number.isInteger(st.median)?st.median:fmt(st.median,1)}</span></td>`;
-    }).join('');
-    return `<tr><td><span class="area-name">${areaLabel(areaId)}</span></td>${cells}</tr>`;
-  }).join('');
-  return `<div class="table-wrap"><table><thead><tr><th>Area</th>${headers}</tr></thead><tbody>${rowsHtml}</tbody></table></div>`;
-}
-function renderRegionFocus(month,tenure){ $('regionTable').innerHTML = miniTable(month, DATA.metadata.regions, 'region', tenure); }
-function renderTenureFocus(month,region){ $('tenureTable').innerHTML = miniTable(month, DATA.metadata.tenures, 'tenure', region); }
-function renderTrend(region,tenure){
-  const months=[...DATA.metadata.months].sort(); $('trendBadge').textContent = `${region} · ${tenure}`;
-  const series=AREA_ORDER.map((areaId,idx)=>{ const points=months.map(m=>{ const st=areaStats(filterResponses(m,region,tenure)).find(a=>a.area_id===areaId); return {month:m,value:st&&st.n?st.avg:null}; }); return {areaId,label:AREA_SHORT[areaId],color:LINE_COLORS[idx],points}; });
-  const w=1080,h=320,left=58,right=24,top=22,bottom=48,plotW=w-left-right,plotH=h-top-bottom; const x=i=>left+(months.length===1?plotW/2:i*plotW/(months.length-1)); const y=v=>top+(5-v)*plotH/4;
-  let grid=''; for(let v=1;v<=5;v++){ grid += `<line x1="${left}" x2="${w-right}" y1="${y(v)}" y2="${y(v)}" stroke="#e8edf5" stroke-width="1"/>`; grid += `<text x="${left-12}" y="${y(v)+4}" text-anchor="end">${v}</text>`; }
-  const monthLabels=months.map((m,i)=>`<text x="${x(i)}" y="${h-18}" text-anchor="middle">${monthLabel(m)}</text>`).join('');
-  let lines=''; series.forEach(s=>{ const valid=s.points.map((p,i)=>({...p,i})).filter(p=>p.value!==null); if(!valid.length) return; if(valid.length===1){ lines += `<circle cx="${x(valid[0].i)}" cy="${y(valid[0].value)}" r="5" fill="${s.color}"/>`; } else { const d=valid.map((p,j)=>`${j?'L':'M'} ${x(p.i)} ${y(p.value)}`).join(' '); lines += `<path d="${d}" fill="none" stroke="${s.color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`; valid.forEach(p=>lines += `<circle cx="${x(p.i)}" cy="${y(p.value)}" r="4" fill="${s.color}"/>`); } });
-  const legend=series.map(s=>`<span><i class="swatch" style="background:${s.color}"></i>${areaLabel(s.areaId)}</span>`).join('');
-  $('trendChart').innerHTML = `<svg viewBox="0 0 ${w} ${h}">${grid}${lines}${monthLabels}</svg><div class="legend trend-legend">${legend}</div>`;
+
+function render() {
+  hideFloatingTooltip();
+  const month = $('monthFilter').value, region = $('regionFilter').value, tenure = $('tenureFilter').value;
+  const comp = comparisonFor(month,region,tenure), rows = getAreas(month,region,tenure), n = getN(month,region,tenure);
+  const scope = `${monthLabel(month)} · Region: ${groupLabel(region)} · Tenure: ${groupLabel(tenure)}`;
+  const compText = comp.month ? `Compared with ${monthLabel(comp.month)}${comp.loaded ? '' : ' (unavailable)'}, using the same region and tenure.` : comp.noneReason === 'no comparison' ? 'Comparison switched off.' : 'No earlier survey available.';
+  $('selectionSummary').textContent = `${scope} · ${isLoaded(month) ? `N = ${n}` : 'Survey unavailable'}. ${compText}`;
+  if (!isLoaded(month)) {
+    $('cards').innerHTML = `<div class="card" style="grid-column:1/-1"><div class="label">Survey unavailable</div><div class="value small">${esc(monthLabel(month))} could not be loaded</div><div class="foot">No other survey has been substituted. Check the data-source error above.</div></div>`;
+    ['overviewTable','likert','regionTable','tenureTable'].forEach(id => $(id).innerHTML = empty('The selected survey file is unavailable.'));
+    $('overviewBadge').textContent = `${monthLabel(month)} · unavailable`;
+  } else {
+    renderCards(month,region,tenure,rows,comp);
+    renderOverview(month,region,tenure,rows,comp);
+    renderLikert(rows);
+    renderRegionFocus(month,tenure);
+    renderTenureFocus(month,region);
+  }
+  // History must still render when the selected survey/subgroup has no responses.
+  renderTrend(region,tenure,month);
 }
 
+function renderCards(month,region,tenure,rows,comp) {
+  const n = getN(month,region,tenure), avg = weightedAvg(rows), concern = concernShare(rows);
+  const ranked = rows.filter(r => r.n > 0 && Number.isFinite(r.avg));
+  const strongest = [...ranked].sort((a,b) => b.avg-a.avg)[0];
+  const weakest = [...ranked].sort((a,b) => a.avg-b.avg)[0];
+  function areaCard(label, r) {
+    const prev = r ? comp.rows.find(p => p.area_id === r.area_id)?.avg : NaN;
+    return `<div class="card"><div class="label">${label}</div><div class="value small">${r ? areaLabel(r.area_id) : 'No valid ratings'}</div><div class="foot">${r ? `Avg ${fmt(r.avg)} · Median ${med(r.median)} · n=${r.n}` : 'For the selected filters'}</div>${delta(r?.avg,prev,comp)}</div>`;
+  }
+  $('cards').innerHTML = `
+    <div class="card"><div class="label">Responses</div><div class="value">${n}</div><div class="foot">${n ? 'Selected survey and filters' : 'No responses for these filters'}</div>${delta(n,comp.n,comp,{decimals:0,neutral:true})}</div>
+    <div class="card"><div class="label">Overall average</div><div class="value">${fmt(avg)}</div><div class="foot">Across valid area ratings</div>${delta(avg,weightedAvg(comp.rows),comp)}</div>
+    ${areaCard('👍 Strongest area',strongest)}
+    ${areaCard('👎 Weakest area',weakest)}
+    <div class="card"><div class="label">Concern share</div><div class="value">${pct(concern)}</div><div class="foot">Scores 1–2 across all areas</div>${delta(concern,concernShare(comp.rows),comp,{suffix:' pp',decimals:1,reverse:true})}</div>`;
+}
+function renderOverview(month,region,tenure,rows,comp) {
+  $('overviewBadge').textContent = `${monthLabel(month)} · N = ${getN(month,region,tenure)}`;
+  const body = rows.map(r => {
+    const prior = comp.rows.find(p => p.area_id === r.area_id)?.avg;
+    return `<tr><td><span class="area-name">${areaLabel(r.area_id)}</span></td><td class="num"><span class="score-pill" style="${scoreColor(r.avg)}">${fmt(r.avg)}</span><span class="smalln">n=${r.n}</span></td><td class="num change-cell">${delta(r.avg,prior,comp,{compact:true})}</td><td class="num">${med(r.median)}</td><td class="num">${pct(r.low_pct)}</td><td class="num">${pct(r.high_pct)}</td></tr>`;
+  }).join('');
+  $('overviewTable').innerHTML = `<div class="table-wrap"><table class="overview-data"><colgroup><col style="width:36%"><col style="width:13%"><col style="width:15%"><col style="width:12%"><col style="width:12%"><col style="width:12%"></colgroup><thead><tr><th scope="col">Area</th><th scope="col" class="num">Average</th><th scope="col" class="num">Δ average<span class="smalln">${comp.month ? 'vs '+monthLabel(comp.month) : 'No comparison'}</span></th><th scope="col" class="num">Median</th><th scope="col" class="num">% 1–2</th><th scope="col" class="num">% 4–5</th></tr></thead><tbody>${body}</tbody></table></div>`;
+}
+function renderLikert(rows) {
+  $('likert').innerHTML = rows.map(r => {
+    const label = `<div class="likert-label"><strong>${areaLabel(r.area_id)}</strong><span>n=${r.n}</span></div>`;
+    if (!r.n) return `<div class="likert-row">${label}<div class="smalln">No valid ratings</div></div>`;
+    const segments = [[r.low_pct,'neg','1–2 low'],[r.neutral_pct,'neu','3 neutral'],[r.high_pct,'pos','4–5 high']];
+    return `<div class="likert-row">${label}<div class="likert-bar" role="img" aria-label="${esc(areaText(r.area_id))}: ${pct(r.low_pct)} low, ${pct(r.neutral_pct)} neutral, ${pct(r.high_pct)} high">${segments.map(([p,cls,label]) => `<div class="seg ${cls}" style="width:${p}%" title="${label}: ${fmt(p,1)}%">${p>=5 ? `<span>${pct(p)}</span>` : ''}</div>`).join('')}</div></div>`;
+  }).join('') + `<div class="legend"><span><i class="swatch" style="background:var(--negative-soft);border:1px solid #f3c9c9"></i>1–2 low / concern</span><span><i class="swatch" style="background:var(--neutral-soft);border:1px solid #f2dda1"></i>3 neutral / mixed</span><span><i class="swatch" style="background:var(--positive-soft);border:1px solid #bfe8d2"></i>4–5 positive</span></div>`;
+}
+function miniTable(month,groups,groupType,fixedFilter) {
+  if (!groups.length) return empty('No groups are available in the loaded data.');
+  const grouped = groups.map(g => {
+    const rs = groupType === 'region' ? filterResponses(month,g,fixedFilter) : filterResponses(month,fixedFilter,g);
+    return {group:g,n:rs.length,rows:areaStats(rs)};
+  });
+  const headers = grouped.map(g => `<th scope="col" class="num">${esc(g.group)}<span class="smalln">N=${g.n}</span></th>`).join('');
+  const rows = AREA_ORDER.map(id => `<tr><td><span class="area-name">${areaLabel(id)}</span></td>${grouped.map(g => {
+    const st = g.rows.find(r => r.area_id === id);
+    return st.n ? `<td class="num"><span class="score-pill" style="${scoreColor(st.avg)}">${fmt(st.avg)} / ${med(st.median)}</span><span class="smalln">n=${st.n}</span></td>` : '<td class="num">—<span class="smalln">n=0</span></td>';
+  }).join('')}</tr>`).join('');
+  const cols = '<col style="width:40%">'+groups.map(() => `<col style="width:${60/groups.length}%">`).join('');
+  return `<div class="table-wrap"><table class="mini-data" style="min-width:${Math.max(520,220+groups.length*100)}px"><colgroup>${cols}</colgroup><thead><tr><th scope="col">Area</th>${headers}</tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function renderRegionFocus(month,tenure) { $('regionTable').innerHTML = miniTable(month,DATA.metadata.regions,'region',tenure); }
+function renderTenureFocus(month,region) { $('tenureTable').innerHTML = miniTable(month,DATA.metadata.tenures,'tenure',region); }
+
+function renderTrend(region,tenure,selectedMonth) {
+  const months = DATA.metadata.months, metric = $('trendMetric').value;
+  const isPct = metric === 'high_pct' || metric === 'low_pct';
+  const metricLabel = $('trendMetric').selectedOptions[0].textContent;
+  $('trendBadge').textContent = `${groupLabel(region)} · ${groupLabel(tenure)}`;
+  const stats = new Map(months.map(m => [m,{loaded:isLoaded(m), n:getN(m,region,tenure), rows:getAreas(m,region,tenure)}]));
+  const series = AREA_ORDER.map((id,i) => ({areaId:id,color:LINE_COLORS[i],points:months.map(m => {
+    const st = stats.get(m).rows.find(r => r.area_id === id);
+    return {month:m, n:st.n, value:stats.get(m).loaded && st.n ? st[metric] : null};
+  })}));
+  const formatValue = v => isPct ? (Number.isFinite(v) ? fmt(v,1)+'%' : '—') : fmt(v,2);
+  // The x-axis uses actual calendar spacing, but only survey rounds are plotted.
+  const monthIndex = m => Number(m.slice(0,4))*12+Number(m.slice(5))-1;
+  const indices = months.map(monthIndex), range = indices.at(-1)-indices[0];
+  let minGap = Infinity;
+  for (let i=1;i<indices.length;i++) minGap = Math.min(minGap,indices[i]-indices[i-1]);
+  const w = Math.max(1080,months.length*115,Number.isFinite(minGap) ? Math.ceil(range/minGap*90)+140 : 0);
+  const h=320,left=62,right=56,top=24,bottom=56,plotW=w-left-right,plotH=h-top-bottom;
+  const x = i => left+(range === 0 ? plotW/2 : (indices[i]-indices[0])/range*plotW);
+  const y = value => isPct ? top+(100-value)/100*plotH : top+(5-value)/4*plotH;
+  const ticks = isPct ? [0,25,50,75,100] : [1,2,3,4,5];
+  let grid = ticks.map(v => `<line x1="${left}" x2="${w-right}" y1="${y(v)}" y2="${y(v)}" stroke="#e8edf5" stroke-width="1"/><text x="${left-12}" y="${y(v)+4}" text-anchor="end">${v}${isPct?'%':''}</text>`).join('');
+  const selected = months.indexOf(selectedMonth);
+  if (selected >= 0) grid += `<rect x="${x(selected)-12}" y="${top}" width="24" height="${plotH}" fill="#e8edf5" opacity=".5"/><line x1="${x(selected)}" x2="${x(selected)}" y1="${top}" y2="${h-bottom}" stroke="#bac4d6" stroke-dasharray="4 4"/>`;
+  let lines = '';
+  series.forEach(s => {
+    // Reset after a missing wave or a wave with no ratings; do not bridge missing data.
+    let d = '', connected = false;
+    s.points.forEach((p,i) => {
+      if (!Number.isFinite(p.value)) { connected = false; return; }
+      d += `${connected ? 'L' : 'M'} ${x(i)} ${y(p.value)} `;
+      connected = true;
+    });
+    if (d) lines += `<path data-area="${s.areaId}" d="${d.trim()}" fill="none" stroke="${s.color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
+    s.points.forEach((p,i) => {
+      if (!Number.isFinite(p.value)) return;
+      const tip = `${areaText(s.areaId)}\n${monthLabel(p.month)} · ${metricLabel}: ${formatValue(p.value)}\nValid ratings: n=${p.n}`;
+      lines += `<circle class="chart-point" tabindex="0" role="img" aria-label="${esc(tip)}" data-tip="${esc(tip)}" data-month="${p.month}" data-area="${s.areaId}" cx="${x(i)}" cy="${y(p.value)}" r="5" fill="${s.color}"><title>${esc(tip)}</title></circle>`;
+    });
+  });
+  const labels = months.map((m,i) => `<text x="${x(i)}" y="${h-28}" text-anchor="middle"${m===selectedMonth ? ' style="font-weight:800;fill:#162032"' : ''}>${monthLabel(m)}</text><text x="${x(i)}" y="${h-10}" text-anchor="middle">${stats.get(m).loaded ? 'N='+stats.get(m).n : 'unavailable'}</text>`).join('');
+  const legend = series.map(s => `<span class="legend-item"><i class="swatch" style="background:${s.color}"></i>${areaLabel(s.areaId)}</span>`).join('');
+  const hasValues = series.some(s => s.points.some(p => Number.isFinite(p.value)));
+  $('trendChart').innerHTML = hasValues ? `<div class="chart-scroll"><svg role="img" aria-label="${esc(metricLabel)} by survey month" viewBox="0 0 ${w} ${h}" style="min-width:${Math.max(660,w*0.68)}px"><title>${esc(metricLabel)} by survey month</title><desc>Filtered by region and tenure. Exact values and sample sizes are available in the table below. Missing surveys are not joined.</desc>${grid}${lines}${labels}</svg></div><div class="legend trend-legend">${legend}</div><p class="chart-note">Points represent survey rounds, not response submission months. Lines connect available adjacent survey rounds; no values are imputed for months without a survey. Hover over or focus a point for its value and sample size.</p>` : empty('No valid ratings across the loaded surveys for this region and tenure.');
+  const tableRows = months.map(m => {
+    const st = stats.get(m);
+    return `<tr><td>${esc(monthLabel(m))}${m===selectedMonth ? '<span class="smalln">Selected survey</span>' : ''}</td><td class="num">${st.loaded ? st.n : '—'}${st.loaded ? '' : '<span class="smalln">Unavailable</span>'}</td>${st.rows.map(r => `<td class="num">${st.loaded ? formatValue(r[metric]) : '—'}<span class="smalln">${st.loaded ? 'n='+r.n : 'Unavailable'}</span></td>`).join('')}</tr>`;
+  }).join('');
+  $('trendTable').innerHTML = `<div class="table-wrap"><table class="history-data"><thead><tr><th scope="col">Survey month</th><th scope="col" class="num">Responses</th>${AREA_ORDER.map(id => `<th scope="col" class="num">${esc(areaText(id))}</th>`).join('')}</tr></thead><tbody>${tableRows}</tbody></table></div><p class="chart-note">Metric: ${esc(metricLabel)}. N is the response count for the selected region and tenure; each area's n excludes missing or invalid ratings.</p>`;
+}
+
+function renderSources() {
+  const loaded = DATA.surveys.filter(s => s.status === 'loaded').length;
+  $('sourceSummary').textContent = `Data sources · ${loaded} of ${DATA.surveys.length} surveys loaded`;
+  const rows = DATA.surveys.map(s => {
+    const status = s.status === 'loaded' ? (s.warnings.length ? 'Loaded with warnings' : s.responses.length ? 'Loaded' : 'Loaded · empty survey') : 'Unavailable';
+    return `<tr><td>${monthLabel(s.month)}</td><td>${esc(s.file)}</td><td class="num">${s.status === 'loaded' ? s.responses.length : '—'}</td><td>${esc(s.lastUpdated || '—')}</td><td>${status}${s.status==='loaded' && s.missingRatings ? `<span class="smalln">${s.missingRatings} missing rating(s)</span>` : ''}</td></tr>`;
+  }).join('');
+  $('sourceTable').innerHTML = `<div class="table-wrap"><table class="source-data"><thead><tr><th scope="col">Survey month</th><th scope="col">JSON file</th><th scope="col" class="num">Responses</th><th scope="col">Last export</th><th scope="col">Status</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+// Delegated question/point tooltips keep working after filters redraw the tables.
 const floatingTooltip = document.createElement('div');
 floatingTooltip.className = 'floating-tooltip';
+floatingTooltip.id = 'floatingTooltip';
+floatingTooltip.setAttribute('role','tooltip');
 document.body.appendChild(floatingTooltip);
-
-function showFloatingTooltip(el){
+let tooltipTarget = null;
+function showFloatingTooltip(el) {
   const text = el.getAttribute('data-tip');
-  if(!text) return;
+  if (!text) return;
+  hideFloatingTooltip();
+  tooltipTarget = el;
+  el.setAttribute('aria-describedby','floatingTooltip');
   floatingTooltip.textContent = text;
   floatingTooltip.classList.add('visible');
-
-  const rect = el.getBoundingClientRect();
-  const margin = 12;
-
-  // Measure after content is visible.
+  const rect = el.getBoundingClientRect(), margin = 12;
   const tipRect = floatingTooltip.getBoundingClientRect();
-
-  let left = rect.left + rect.width / 2 - tipRect.width / 2;
-  left = Math.max(margin, Math.min(left, window.innerWidth - tipRect.width - margin));
-
-  let top = rect.top - tipRect.height - 10;
-  if(top < margin){
-    top = rect.bottom + 10;
-  }
-
-  floatingTooltip.style.left = `${left}px`;
-  floatingTooltip.style.top = `${top}px`;
+  let left = rect.left+rect.width/2-tipRect.width/2;
+  left = Math.max(margin,Math.min(left,window.innerWidth-tipRect.width-margin));
+  let top = rect.top-tipRect.height-10;
+  if (top < margin) top = rect.bottom+10;
+  top = Math.max(margin,Math.min(top,window.innerHeight-tipRect.height-margin));
+  floatingTooltip.style.left = `${left}px`; floatingTooltip.style.top = `${top}px`;
 }
-
-function hideFloatingTooltip(){
+function hideFloatingTooltip() {
   floatingTooltip.classList.remove('visible');
+  if (tooltipTarget) tooltipTarget.removeAttribute('aria-describedby');
+  tooltipTarget = null;
 }
-
-document.addEventListener('mouseover', e => {
-  const el = e.target.closest && e.target.closest('.info-icon');
-  if(el) showFloatingTooltip(el);
-});
-document.addEventListener('focusin', e => {
-  const el = e.target.closest && e.target.closest('.info-icon');
-  if(el) showFloatingTooltip(el);
-});
-document.addEventListener('mouseout', e => {
-  const el = e.target.closest && e.target.closest('.info-icon');
-  if(el) hideFloatingTooltip();
-});
-document.addEventListener('focusout', e => {
-  const el = e.target.closest && e.target.closest('.info-icon');
-  if(el) hideFloatingTooltip();
-});
-window.addEventListener('scroll', hideFloatingTooltip, true);
-window.addEventListener('resize', hideFloatingTooltip);
-
+function closestTip(target) { return target && typeof target.closest === 'function' ? target.closest('[data-tip]') : null; }
+document.addEventListener('mouseover', e => { const el = closestTip(e.target); if(el) showFloatingTooltip(el); });
+document.addEventListener('focusin', e => { const el = closestTip(e.target); if(el) showFloatingTooltip(el); });
+document.addEventListener('mouseout', e => { if(closestTip(e.target)) hideFloatingTooltip(); });
+document.addEventListener('focusout', e => { if(closestTip(e.target)) hideFloatingTooltip(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') hideFloatingTooltip(); });
+function repositionOrHideTooltip() {
+  const target = tooltipTarget;
+  if (target && target === document.activeElement && document.contains(target)) {
+    const rect = target.getBoundingClientRect();
+    if (rect.bottom > 0 && rect.top < window.innerHeight && rect.right > 0 && rect.left < window.innerWidth) {
+      showFloatingTooltip(target);
+      return;
+    }
+  }
+  hideFloatingTooltip();
+}
+window.addEventListener('scroll', repositionOrHideTooltip, true);
+window.addEventListener('resize', repositionOrHideTooltip);
 loadData();
 </script>
 </body>
