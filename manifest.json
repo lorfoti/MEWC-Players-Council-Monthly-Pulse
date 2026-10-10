@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "surveys": [
+    {
+      "month": "2026-06",
+      "file": "data.json"
+    },
+    {
+      "month": "2026-09",
+      "file": "data-2026-09.json"
+    }
+  ]
+}
