@@ -185,7 +185,6 @@ footer{max-width:1000px;margin:24px auto 0}
   <div class="filter"><label for="regionFilter">Region</label><select id="regionFilter" disabled></select></div>
   <div class="filter"><label for="tenureFilter">Tenure</label><select id="tenureFilter" disabled></select></div>
   <div class="filter filter-wide"><label for="compareFilter">Compare with</label><select id="compareFilter" disabled></select></div>
-  <p class="filter-help">Survey month is the assigned survey period, not the date a response was submitted.</p>
  </div>
 </header>
 <noscript><div class="empty">JavaScript is required to load the survey files and calculate this dashboard.</div></noscript>
@@ -199,16 +198,10 @@ footer{max-width:1000px;margin:24px auto 0}
  <section class="panel"><div class="section-head"><div><h2>Region focus</h2><div class="section-note">Average / median across all regions, for the selected survey and tenure.</div></div></div><div id="regionTable"></div></section>
  <section class="panel"><div class="section-head"><div><h2>Tenure focus</h2><div class="section-note">Average / median across all tenures, for the selected survey and region.</div></div></div><div id="tenureTable"></div></section>
  <section class="panel full"><div class="section-head"><div><h2>Trend view</h2><div class="section-note">All survey rounds, filtered by region and tenure. The selected survey is highlighted.</div></div><div class="badge" id="trendBadge"></div></div>
-  <div class="trend-tools"><div class="filter"><label for="trendMetric">Trend metric</label><select id="trendMetric" disabled><option value="avg">Average score</option><option value="median">Median score</option><option value="high_pct">Positive share (4–5)</option><option value="low_pct">Concern share (1–2)</option></select></div><div class="section-note">Points use the survey month assigned in the manifest, including responses submitted in a different calendar month.</div></div>
+  <div class="trend-tools"><div class="filter"><label for="trendMetric">Trend metric</label><select id="trendMetric" disabled><option value="avg">Average score</option><option value="median">Median score</option><option value="high_pct">Positive share (4–5)</option><option value="low_pct">Concern share (1–2)</option></select></div></div>
   <div class="svg-wrap" id="trendChart"></div>
-  <details class="history-details"><summary>Survey values and sample sizes</summary><div id="trendTable"></div></details>
  </section>
 </div>
-<details class="panel source-details" id="sourceDetails"><summary id="sourceSummary">Data sources</summary><div id="sourceTable"></div><div class="section-note">Each file must contain only one survey round, not a cumulative export of multiple rounds. Only files listed in manifest.json are loaded.</div></details>
-<footer>
- This dashboard displays aggregated ratings. The underlying published JSON files remain accessible and should contain anonymous ratings only, with free-text comments excluded before publication.<br>
- N counts responses; n counts valid ratings for an area. Overall average and concern share pool all valid area ratings. Survey comparisons use the same region and tenure filters, but do not track the same individuals across rounds. Interpret small groups and changes in sample composition with care.
-</footer>
 </div>
 <script>
 'use strict';
@@ -433,8 +426,7 @@ async function loadData() {
     showError(e.message);
     $('lastUpdated').textContent = 'Data unavailable';
     $('selectionSummary').textContent = 'Correct the file or manifest and refresh the page. No embedded fallback data is used.';
-    ['cards','overviewTable','likert','regionTable','tenureTable','trendChart','trendTable'].forEach(id => $(id).innerHTML = empty('Data could not be loaded. See the error above.'));
-    $('sourceDetails').hidden = true;
+    ['cards','overviewTable','likert','regionTable','tenureTable','trendChart'].forEach(id => $(id).innerHTML = empty('Data could not be loaded. See the error above.'));
   }
 }
 
@@ -531,7 +523,6 @@ function init() {
   ['monthFilter','regionFilter','tenureFilter','compareFilter','trendMetric'].forEach(id => $(id).disabled = false);
   $('monthFilter').addEventListener('change', () => { updateCompareOptions(); render(); });
   ['regionFilter','tenureFilter','compareFilter','trendMetric'].forEach(id => $(id).addEventListener('change', render));
-  renderSources();
   render();
 }
 
@@ -649,12 +640,7 @@ function renderTrend(region,tenure,selectedMonth) {
   const labels = months.map((m,i) => `<text x="${x(i)}" y="${h-28}" text-anchor="middle"${m===selectedMonth ? ' style="font-weight:800;fill:#162032"' : ''}>${monthLabel(m)}</text><text x="${x(i)}" y="${h-10}" text-anchor="middle">${stats.get(m).loaded ? 'N='+stats.get(m).n : 'unavailable'}</text>`).join('');
   const legend = series.map(s => `<span class="legend-item"><i class="swatch" style="background:${s.color}"></i>${areaLabel(s.areaId)}</span>`).join('');
   const hasValues = series.some(s => s.points.some(p => Number.isFinite(p.value)));
-  $('trendChart').innerHTML = hasValues ? `<div class="chart-scroll"><svg role="img" aria-label="${esc(metricLabel)} by survey month" viewBox="0 0 ${w} ${h}" style="min-width:${Math.max(660,w*0.68)}px"><title>${esc(metricLabel)} by survey month</title><desc>Filtered by region and tenure. Exact values and sample sizes are available in the table below. Missing surveys are not joined.</desc>${grid}${lines}${labels}</svg></div><div class="legend trend-legend">${legend}</div><p class="chart-note">Points represent survey rounds, not response submission months. Lines connect available adjacent survey rounds; no values are imputed for months without a survey. Hover over or focus a point for its value and sample size.</p>` : empty('No valid ratings across the loaded surveys for this region and tenure.');
-  const tableRows = months.map(m => {
-    const st = stats.get(m);
-    return `<tr><td>${esc(monthLabel(m))}${m===selectedMonth ? '<span class="smalln">Selected survey</span>' : ''}</td><td class="num">${st.loaded ? st.n : '—'}${st.loaded ? '' : '<span class="smalln">Unavailable</span>'}</td>${st.rows.map(r => `<td class="num">${st.loaded ? formatValue(r[metric]) : '—'}<span class="smalln">${st.loaded ? 'n='+r.n : 'Unavailable'}</span></td>`).join('')}</tr>`;
-  }).join('');
-  $('trendTable').innerHTML = `<div class="table-wrap"><table class="history-data"><thead><tr><th scope="col">Survey month</th><th scope="col" class="num">Responses</th>${AREA_ORDER.map(id => `<th scope="col" class="num">${esc(areaText(id))}</th>`).join('')}</tr></thead><tbody>${tableRows}</tbody></table></div><p class="chart-note">Metric: ${esc(metricLabel)}. N is the response count for the selected region and tenure; each area's n excludes missing or invalid ratings.</p>`;
+  $('trendChart').innerHTML = hasValues ? `<div class="chart-scroll"><svg role="img" aria-label="${esc(metricLabel)} by survey month" viewBox="0 0 ${w} ${h}" style="min-width:${Math.max(660,w*0.68)}px"><title>${esc(metricLabel)} by survey month</title><desc>Filtered by region and tenure. Missing surveys are not joined.</desc>${grid}${lines}${labels}</svg></div><div class="legend trend-legend">${legend}</div>` : empty('No valid ratings across the loaded surveys for this region and tenure.');
 }
 
 function renderSources() {
